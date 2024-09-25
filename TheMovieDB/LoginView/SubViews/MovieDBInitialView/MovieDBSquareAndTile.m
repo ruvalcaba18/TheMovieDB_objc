@@ -6,6 +6,11 @@
 //
 
 #import "MovieDBSquareAndTile.h"
+@interface MovieDBSquareAndTile()
+-(void)commonInit;
+-(void)setupConstraints;
+-(void)modifyContainerLayer;
+@end
 
 @implementation MovieDBSquareAndTile
 @synthesize containerView;
@@ -34,10 +39,10 @@
     [[NSBundle mainBundle] loadNibNamed:@"MovieDBSquareAndTile" owner:self options:nil];
     [self addSubview: self.containerView];
     [self setupConstraints];
-    [self addStrongGreenBorder];
+    [self modifyContainerLayer];
 }
 
--(void) setupConstraints {
+-(void)setupConstraints {
     self.containerView.translatesAutoresizingMaskIntoConstraints = NO;
     NSLayoutConstraint *top = [containerView.topAnchor constraintEqualToAnchor:self.topAnchor];
     NSLayoutConstraint *bottom = [containerView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor];
@@ -50,7 +55,7 @@
     trailing.active = YES;
 }
 
--(void)addStrongGreenBorder {
+-(void)modifyContainerLayer{
     
     self.containerView.layer.borderWidth = 5.0;
     self.containerView.layer.borderColor = [UIColor systemGreenColor].CGColor;

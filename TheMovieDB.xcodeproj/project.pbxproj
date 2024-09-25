@@ -37,6 +37,25 @@
 			);
 			target = 18F808F32CA37BBC0094D58F /* TheMovieDB */;
 		};
+		18F809362CA37FE20094D58F /* Exceptions for "TheMovieDB" folder in "TheMovieDBTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				LoginView/Model/User.m,
+				LoginView/SubViews/MovieDBInitialView/MovieDBSquareAndTile.m,
+				LoginView/SubViews/MovieDBInitialView/MovieDBSquareAndTile.xib,
+				"LoginView/View-Model/LoginViewModel.m",
+				TvShowsView/Model/PopularEndpoint/TvShowsPopularModel.m,
+				TvShowsView/Model/TvShowsModel.m,
+				"TvShowsView/View-Model/TvShowsViewModel.m",
+				TvShowsView/View/TvShowsViewController.m,
+				TvShowsView/View/TvShowsViewController.xib,
+				UsersToRetrieve.json,
+				Utils/Constants/Constants.m,
+				Utils/ViewComponents/SelectView/SelectOptionView.m,
+				Utils/ViewComponents/SelectView/SelectOptionView.xib,
+			);
+			target = 18F8090E2CA37BBD0094D58F /* TheMovieDBTests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -44,6 +63,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				18F809212CA37BBD0094D58F /* Exceptions for "TheMovieDB" folder in "TheMovieDB" target */,
+				18F809362CA37FE20094D58F /* Exceptions for "TheMovieDB" folder in "TheMovieDBTests" target */,
 			);
 			path = TheMovieDB;
 			sourceTree = "<group>";

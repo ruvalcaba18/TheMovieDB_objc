@@ -8,24 +8,38 @@
 #import "TvShowsViewController.h"
 
 @interface TvShowsViewController ()
-
+@property (atomic , strong) TvShowsViewModel *viewModel;
 @end
 
 @implementation TvShowsViewController
+@synthesize tvSegmentControl,tvShowsCollectionView,viewModel;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    self.tvShowsCollectionView.delegate = self;
+    self.tvShowsCollectionView.dataSource = self;
+    [self.tvShowsCollectionView registerNib:[UINib nibWithNibName: @"TvShowCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:tvShowCellIdentifier];
+    
+    self.viewModel = [[TvShowsViewModel alloc] initTvShowsViewModel];
+    [self.viewModel starFetchOption:searchTvShows];
+    
 }
 
-/*
-#pragma mark - Navigation
+#pragma mark: - Collection view Delegate and Data source
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return 1;
 }
-*/
+
+- (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    TvShowCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: tvShowCellIdentifier forIndexPath:indexPath];
+    
+    return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    return CGSizeMake(175, 350);
+}
+
 
 @end

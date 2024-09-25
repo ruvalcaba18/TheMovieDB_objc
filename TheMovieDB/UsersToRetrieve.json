@@ -1,0 +1,22 @@
+
+{
+    "users": [
+        {
+            "username":"evasquez@applaudostudios.com,",
+            "password":"evasquez"
+        },
+        {
+            "username":"cmerino@applaudostudios.com,",
+            "password":"cmerino"
+        },
+        {
+            "username":"emelgar@applaudostudios.com.",
+            "password":"emelgar",
+        },
+        {
+            "username":"codingKid",
+            "password":"coding",
+        }
+
+    ]
+}
