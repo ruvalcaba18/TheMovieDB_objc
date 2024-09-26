@@ -10,12 +10,18 @@
 #import "TvShowCollectionViewCell.h"
 #import "OptionToSearch.h"
 #import "TvShowsViewModel.h"
+#import "SelectOptionView.h"
+#import "DetailShowViewController.h"
+#import "TopFilerOption.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TvShowsViewController : UIViewController<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+
 @property (strong, nonatomic) IBOutlet UISegmentedControl *tvSegmentControl;
 @property (strong, nonatomic) IBOutlet UICollectionView *tvShowsCollectionView;
+@property (strong, nonatomic) IBOutlet UIView *optionContainer;
+@property (strong, nonatomic) IBOutlet UIStackView *stackSegmenContainer;
 
 @end
 

@@ -11,6 +11,8 @@
 @property (atomic, strong) LoginViewModel *viewModel;
 @property (atomic, strong) NSString *userTapped;
 @property (atomic, strong ) NSString *passwordTapped;
+
+-(void)setUpNavigation;
 @end
 
 @implementation LoginViewController
@@ -24,6 +26,7 @@
     self.passwordTextField.secureTextEntry = YES;
     self.wallpaperImage.alpha = 0.5;
     [self.wallpaperView sendSubviewToBack:self.wallpaperImage];
+    [self setUpNavigation];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -36,6 +39,21 @@
     gradient.colors = @[(id)[UIColor systemGreenColor].CGColor, (id)[UIColor blackColor].CGColor];
     gradient.locations = @[ @0.3, @0.7 ];
     [self.wallpaperView.layer insertSublayer:gradient below:self.wallpaperImage.layer];
+}
+
+-(void)setUpNavigation {
+    UINavigationBarAppearance *navAppearance = [UINavigationBarAppearance new];
+    [navAppearance configureWithTransparentBackground];
+    navAppearance.backgroundColor = [UIColor blackColor];
+    
+    NSDictionary *titleTextAttributes = @{ NSForegroundColorAttributeName: [UIColor whiteColor],
+                                           NSFontAttributeName: [UIFont boldSystemFontOfSize:16.0]
+    } ;
+    
+    navAppearance.titleTextAttributes = titleTextAttributes;
+    self.navigationItem.standardAppearance = navAppearance;
+    self.navigationItem.scrollEdgeAppearance = navAppearance;
+    self.navigationController.topViewController.title = LoginTitle;
 }
 
 

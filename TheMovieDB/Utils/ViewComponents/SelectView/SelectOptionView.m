@@ -8,12 +8,14 @@
 #import "SelectOptionView.h"
 
 @interface SelectOptionView()
+@property (atomic, assign) OptionToSearch optionSelected;
 -(void)commonInit;
--(void)setupConstraints ;
+-(void)setupConstraints;
+
 @end
 
 @implementation SelectOptionView
-@synthesize containerView;
+@synthesize containerView,optionSelected;
 
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
@@ -37,7 +39,9 @@
     
     [[NSBundle mainBundle ] loadNibNamed:@"SelectOptionView" owner:self options:nil];
     [self addSubview:self.containerView];
-    
+    [self setupConstraints];
+    self.tvShowsButton.layer.cornerRadius = 15;
+    self.moviesButton.layer.cornerRadius = 15;
 }
 
 -(void)setupConstraints {
@@ -51,5 +55,19 @@
     bottom.active = YES;
     leading.active = YES;
     trailing.active = YES;
+}
+
+- (IBAction)moviesSelection:(UIButton *)sender {
+    self.optionSelected = searchMovies;
+    NSDictionary *userInfo = @{@"Option": @(self.optionSelected)};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MovieOptionSelected"
+                                                        object:nil
+                                                      userInfo:userInfo];
+}
+
+- (IBAction)tvShowsSelection:(UIButton *)sender {
+    self.optionSelected = searchTvShows;
+    NSDictionary *userInfo = @{@"Option":@(self.optionSelected)};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MovieOptionSelected" object:nil userInfo:userInfo];
 }
 @end

@@ -13,6 +13,7 @@
 #import "UIKit/UIKit.h"
 #import "ImagesEndpoint.h"
 #import "PostersObject.h"
+#import "TopFilerOption.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,8 +22,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableArray *popularTvShows;
 
 -(instancetype)initTvShowsViewModel;
--(void)starFetchOption:(OptionToSearch)option;
+-(void)starFetchFirstOption:(OptionToSearch)option;
+-(void)retrieveFilterSelected:(TopFilter)filterOption;
 -(void) loadImageForTvShows:(TvShowsPopularModel *)tvShow completion:(void (^)(UIImage *image, NSError *error)) completion ;
+-(NSString *)getDateCorrectFormat:(NSString *)dateToGiveFormat;
 @end
 
 NS_ASSUME_NONNULL_END

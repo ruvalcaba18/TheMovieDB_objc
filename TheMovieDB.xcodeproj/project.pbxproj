@@ -40,6 +40,8 @@
 		18F809362CA37FE20094D58F /* Exceptions for "TheMovieDB" folder in "TheMovieDBTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				DetailsView/View/DetailShowViewController.m,
+				DetailsView/View/DetailShowViewController.xib,
 				LoginView/Model/User.m,
 				LoginView/SubViews/MovieDBInitialView/MovieDBSquareAndTile.m,
 				LoginView/SubViews/MovieDBInitialView/MovieDBSquareAndTile.xib,

@@ -7,12 +7,15 @@
 
 #import "TvShowsViewModel.h"
 
-
+#pragma mark: - Private methods and variables
 @interface TvShowsViewModel()
+
 @property (nonatomic,strong) NSCache *imageCache;
+
 -(void)performRequestWithURL:(NSString *)urlString completion:(void (^)(NSData *data,NSError *error))completion;
 @end
 
+#pragma mark: - Implementation of the class
 @implementation TvShowsViewModel
 @synthesize popularTvShows,imageCache;
 
@@ -26,49 +29,27 @@
     return self;
 }
 
--(void)starFetchOption:(OptionToSearch)option {
+-(void)starFetchFirstOption:(OptionToSearch)option {
     
     NSMutableURLRequest *request;
     
     switch (option) {
         case searchTvShows: {
             
-            NSString *halfUrl= [[baseURL stringByAppendingString:discoverEndpoint]
-                                stringByAppendingString:tvShowsEndPoint];
+            NSString *fullURLForPopularShows = [NSString stringWithFormat:@"%@%@%@?%@&api_key=%@",baseURL,discoverEndpoint,tvShowsEndPoint,tvShowsEndPointPopular,apiKey];
             
-            NSString *fullURLToDiscoverTvShows = [[[halfUrl stringByAppendingString:@"?language=en-US&page=1&sort_by=popularity.desc"]stringByAppendingString:@"&api_key="] stringByAppendingString:apiKey];
+            NSLog(@"full url %@",fullURLForPopularShows);
             
             
-            request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:fullURLToDiscoverTvShows]
-                                              cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                          timeoutInterval:10.0];
-            
-            [request setHTTPMethod:@"GET"];
-            
-            NSURLSession *session = [NSURLSession sharedSession];
-            
-            NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
-                                                        completionHandler:^(NSData *data,
-                                                                            NSURLResponse *response,
-                                                                            NSError *error) {
-                
+            [self performRequestWithURL:fullURLForPopularShows completion:^(NSData *data, NSError *error) {
                 if (error) {
-                    NSLog(@"%@", error);
+                    
                 } else {
-                    
-                    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
-                    
-                    switch (httpResponse.statusCode) {
-                        case 200:
-                            self.popularTvShows = [self decodeInformationFromData:data];
-                        default:
-                            return;
-                    }
-                    
+                    self.popularTvShows = [self decodeInformationFromData:data];
                 }
             }];
             
-            [dataTask resume];
+            break;
         }
         case searchMovies: {
             
@@ -78,23 +59,37 @@
     }
 }
 
--(NSMutableArray *)decodeInformationFromData:(NSData *)dataFromAPI {
-    
-    NSError *jsonError;
-    NSDictionary *jsonInformation = [NSJSONSerialization JSONObjectWithData:dataFromAPI options:0 error:&jsonError];
-    
-    if (jsonError) {
-        NSLog(@"JSON Error: %@",jsonError);
-        return nil;
-    }
-    
-    TvShowsModel *tvShowModel = [[TvShowsModel alloc] initModelWithPageNumber: jsonInformation[@"page"]
-                                                                   totalPages: jsonInformation[@"total_pages"]
-                                                                 totalResults: jsonInformation[@"total_Results"]
-                                                                    andResult: jsonInformation[@"results"]];
-    return [tvShowModel getResults];
-}
 
+- (void)retrieveFilterSelected:(TopFilter)filterOption {
+    
+  
+    switch (filterOption ) {
+        case SerchPopularTvShows:
+            
+            break;
+        case SearchTopRatedTvShows:
+            
+            break;
+        case SearchOnTvShows:
+            
+            break;
+        case SearchAiringTodayShows:
+            
+            break;
+        case SearchNowPlayingMovies:
+            
+            break;
+        case SearchPopularMovies:
+            
+            break;
+        case SearchTopRatedMovies:
+            
+            break;
+        case SearchUpcomingMovies:
+            
+            break;
+    }
+}
 
 -(void) loadImageForTvShows:(TvShowsPopularModel *)tvShow completion:(void (^)(UIImage *image, NSError *error)) completion {
     
@@ -145,6 +140,57 @@
     }];
 }
 
+-(void)performRequestWithURL:(NSString *)urlString completion:(void (^)(NSData *data,NSError *error))completion {
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [NSURLRequest requestWithURL: url cachePolicy: NSURLRequestUseProtocolCachePolicy timeoutInterval: 10.0];
+   
+    NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data,
+                                                                                                                   NSURLResponse * _Nullable response,
+                                                                                                                   NSError * _Nullable error) {
+        if (error) {
+            completion(nil,error);
+        } else {
+            
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            
+            switch (httpResponse.statusCode) {
+                case 200:
+                    completion(data,nil);
+                    break;
+                    
+                default:
+                    break;
+            }
+           
+        }
+    }];
+    [dataTask resume];
+}
+
+
+
+#pragma mark: - Decoders
+-(NSMutableArray *)decodeInformationFromData:(NSData *)dataFromAPI {
+    
+    NSError *jsonError;
+    NSDictionary *jsonInformation = [NSJSONSerialization JSONObjectWithData:dataFromAPI options:0 error:&jsonError];
+    
+    if (jsonError) {
+        NSLog(@"JSON Error: %@",jsonError);
+        return nil;
+    }
+    
+    TvShowsModel *tvShowModel = [[TvShowsModel alloc] initModelWithPageNumber: jsonInformation[@"page"]
+                                                                   totalPages: jsonInformation[@"total_pages"]
+                                                                 totalResults: jsonInformation[@"total_Results"]
+                                                                    andResult: jsonInformation[@"results"]];
+    return [tvShowModel getResults];
+}
+
+
+
+
 -(PostersObject *)decodePosterInformationFromData:(NSData *)posterData {
     
     NSError *jsonError;
@@ -164,21 +210,19 @@
     return nil;
 }
 
-
--(void)performRequestWithURL:(NSString *)urlString completion:(void (^)(NSData *data,NSError *error))completion {
+#pragma mark: - functions that transform variables
+-(NSString *)getDateCorrectFormat:(NSString *)dateToGiveFormat {
     
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL: url cachePolicy: NSURLRequestUseProtocolCachePolicy timeoutInterval: 10.0];
+    NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
     
-    NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data,
-                                                                                                                   NSURLResponse * _Nullable response,
-                                                                                                                   NSError * _Nullable error) {
-        if (error) {
-            completion(nil,error);
-        } else {
-            completion(data,nil);
-        }
-    }];
-    [dataTask resume];
+    [inputFormatter setDateFormat:@"yyy-MM-dd"];
+    
+    NSDate *date = [inputFormatter dateFromString:dateToGiveFormat];
+    
+    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+    [outputFormatter setDateFormat:@"MMM dd, yyyy"];
+    
+    NSString *formattedDate = [outputFormatter stringFromDate:date];
+    return formattedDate;
 }
 @end
