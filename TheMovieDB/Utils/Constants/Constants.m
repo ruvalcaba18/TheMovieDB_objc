@@ -9,6 +9,7 @@
 #import "Constants.h"
 
 NSString* const baseURL = @"https://api.themoviedb.org/3/";
+NSString* const baseImagesURL = @"https://image.tmdb.org/t/p/original";
 NSString* const discoverEndpoint = @"discover/";
 NSString* const tvShowsEndPoint = @"tv";
 NSString* const tvShowsEndPointTopRated = @"top_rated/";

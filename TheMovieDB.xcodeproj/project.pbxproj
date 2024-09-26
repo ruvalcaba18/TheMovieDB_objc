@@ -44,6 +44,8 @@
 				LoginView/SubViews/MovieDBInitialView/MovieDBSquareAndTile.m,
 				LoginView/SubViews/MovieDBInitialView/MovieDBSquareAndTile.xib,
 				"LoginView/View-Model/LoginViewModel.m",
+				TvShowsView/Model/ImagesEndpoint/ImagesEndpoint.m,
+				TvShowsView/Model/ImagesEndpoint/PostersObject.m,
 				TvShowsView/Model/PopularEndpoint/TvShowsPopularModel.m,
 				TvShowsView/Model/TvShowsModel.m,
 				"TvShowsView/View-Model/TvShowsViewModel.m",

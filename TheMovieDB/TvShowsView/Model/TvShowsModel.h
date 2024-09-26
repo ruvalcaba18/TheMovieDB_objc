@@ -10,10 +10,14 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TvShowsModel : NSObject
-@property (atomic, strong) NSNumber *pageNumber;
-@property (atomic, strong) NSArray<TvShowsPopularModel *> *result;
-@property (atomic, strong) NSNumber *total_pages;
-@property (atomic, strong) NSNumber *total_results;
+
+-(instancetype)initModelWithPageNumber:(NSNumber *) pageNumber
+                            totalPages:(NSNumber *)pages
+                          totalResults:(NSNumber *)totalResults
+                             andResult:(NSArray *)results;
+
+- (NSMutableArray *)getResults;
+
 @end
 
 NS_ASSUME_NONNULL_END

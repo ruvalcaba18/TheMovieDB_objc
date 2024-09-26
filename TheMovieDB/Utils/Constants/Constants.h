@@ -7,6 +7,7 @@
 #import "Foundation/Foundation.h"
 
 extern NSString* const baseURL;
+extern NSString* const baseImagesURL;
 extern NSString* const discoverEndpoint;
 extern NSString* const tvShowsEndPoint;
 extern NSString* const tvShowsEndPointTopRated;

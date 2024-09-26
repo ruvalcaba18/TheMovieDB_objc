@@ -6,12 +6,31 @@
 //
 
 #import "TvShowCollectionViewCell.h"
+@interface TvShowCollectionViewCell()
+
+@end
 
 @implementation TvShowCollectionViewCell
+@synthesize movieTitle,moviePoster,moviePopularityLabel,movieDescriptionLabel,movieReleaseDateLabel;
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+    }
+    return self;
 }
+
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        
+    }
+    return self;
+}
+
 
 @end
