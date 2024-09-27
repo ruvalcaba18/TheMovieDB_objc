@@ -16,7 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) IBOutlet UILabel *movieReleaseDateLabel;
 @property (strong, nonatomic) IBOutlet UILabel *moviePopularityLabel;
 @property (strong, nonatomic) IBOutlet UILabel *movieDescriptionLabel;
-
+@property (nonatomic, strong) NSArray<CAGradientLayer *> *shimmerLayersTest;
+@property (nonatomic, strong) NSArray<UIView *> *viewsToAnimateTest;
 -(void)addShimmerEffect;
 -(void)removeShimmerEffect;
 @end
