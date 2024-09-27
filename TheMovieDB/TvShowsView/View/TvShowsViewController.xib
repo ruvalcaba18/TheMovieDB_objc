@@ -30,8 +30,8 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IbR-6o-5wZ">
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="114"/>
                                     <subviews>
-                                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bordered" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="CcB-JO-YYC">
-                                            <rect key="frame" x="20" y="19" width="353" height="77"/>
+                                        <segmentedControl opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="CcB-JO-YYC">
+                                            <rect key="frame" x="10" y="25" width="373" height="75"/>
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <segments>
                                                 <segment title=""/>
@@ -45,10 +45,10 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="CcB-JO-YYC" secondAttribute="trailing" constant="20" id="DEq-bP-5G5"/>
-                                        <constraint firstAttribute="bottom" secondItem="CcB-JO-YYC" secondAttribute="bottom" constant="19" id="FHO-YF-5zn"/>
-                                        <constraint firstItem="CcB-JO-YYC" firstAttribute="leading" secondItem="IbR-6o-5wZ" secondAttribute="leading" constant="20" id="cWE-bN-V8A"/>
-                                        <constraint firstItem="CcB-JO-YYC" firstAttribute="top" secondItem="IbR-6o-5wZ" secondAttribute="top" constant="19" id="mKB-rq-hRx"/>
+                                        <constraint firstAttribute="trailing" secondItem="CcB-JO-YYC" secondAttribute="trailing" constant="10" id="DEq-bP-5G5"/>
+                                        <constraint firstAttribute="bottom" secondItem="CcB-JO-YYC" secondAttribute="bottom" constant="15" id="FHO-YF-5zn"/>
+                                        <constraint firstItem="CcB-JO-YYC" firstAttribute="leading" secondItem="IbR-6o-5wZ" secondAttribute="leading" constant="10" id="cWE-bN-V8A"/>
+                                        <constraint firstItem="CcB-JO-YYC" firstAttribute="top" secondItem="IbR-6o-5wZ" secondAttribute="top" constant="25" id="mKB-rq-hRx"/>
                                     </constraints>
                                 </view>
                             </subviews>

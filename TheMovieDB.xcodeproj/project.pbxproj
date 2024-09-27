@@ -40,6 +40,17 @@
 		18F809362CA37FE20094D58F /* Exceptions for "TheMovieDB" folder in "TheMovieDBTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				DetailsView/Model/CreatorModel/Creator.m,
+				DetailsView/Model/EpisodeModel/Episode.m,
+				DetailsView/Model/GenreModel/Genre.m,
+				DetailsView/Model/MovieDetails/MovieDetails.m,
+				DetailsView/Model/NetworkModel/NetworkModel.m,
+				DetailsView/Model/ProductionCompanyModel/ProductionCompany.m,
+				DetailsView/Model/ProductionCountryModel/ProductionCountry.m,
+				DetailsView/Model/SeasonModel/Season.m,
+				DetailsView/Model/SpokenLanguageModel/SpokenLanguage.m,
+				DetailsView/Model/TVSerieDetails/TvSerie.m,
+				"DetailsView/View-Model/DetailViewModel.m",
 				DetailsView/View/DetailShowViewController.m,
 				DetailsView/View/DetailShowViewController.xib,
 				LoginView/Model/User.m,
@@ -212,6 +223,7 @@
 				TargetAttributes = {
 					18F808F32CA37BBC0094D58F = {
 						CreatedOnToolsVersion = 16.0;
+						LastSwiftMigration = 1600;
 					};
 					18F8090E2CA37BBD0094D58F = {
 						CreatedOnToolsVersion = 16.0;
@@ -311,6 +323,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J58ZDFPQ77;
@@ -329,6 +342,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.TheMovieDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -338,6 +353,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J58ZDFPQ77;
@@ -356,6 +372,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.TheMovieDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

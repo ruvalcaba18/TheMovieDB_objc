@@ -68,6 +68,7 @@
     navAppearance.titleTextAttributes = titleTextAttributes;
     self.navigationItem.standardAppearance = navAppearance;
     self.navigationItem.scrollEdgeAppearance = navAppearance;
+    self.navigationItem.hidesBackButton = YES;
 }
 
 - (void)configureCollectionView {
@@ -236,6 +237,7 @@
     TvShowCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:tvShowCellIdentifier forIndexPath:indexPath];
     cell.layer.masksToBounds = YES;
     cell.layer.cornerRadius = 15;
+    cell.userInteractionEnabled = NO;
     
     TvShowsPopularModel *tvShow = self.isOptionSelected ? self.viewModel.popularTvShows[indexPath.row] : nil;
     [cell addShimmerEffect];
@@ -266,6 +268,7 @@
         cell.movieReleaseDateLabel.text = [self.viewModel formatDate:tvShow.first_air_date ?: tvShow.release_date];
         
         [cell removeShimmerEffect];
+        cell.userInteractionEnabled = YES;
         
     });
 }

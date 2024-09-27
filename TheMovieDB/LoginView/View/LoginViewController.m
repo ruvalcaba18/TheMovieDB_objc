@@ -32,6 +32,7 @@
 - (void)viewDidLayoutSubviews {
     
     [super viewDidLayoutSubviews];
+    
     CAGradientLayer *gradient = [CAGradientLayer layer];
     gradient.frame = self.wallpaperView.bounds;
     gradient.startPoint = CGPointMake(0, 0);
@@ -39,9 +40,11 @@
     gradient.colors = @[(id)[UIColor systemGreenColor].CGColor, (id)[UIColor blackColor].CGColor];
     gradient.locations = @[ @0.3, @0.7 ];
     [self.wallpaperView.layer insertSublayer:gradient below:self.wallpaperImage.layer];
+    
 }
 
 -(void)setUpNavigation {
+    
     UINavigationBarAppearance *navAppearance = [UINavigationBarAppearance new];
     [navAppearance configureWithTransparentBackground];
     navAppearance.backgroundColor = [UIColor blackColor];
@@ -54,6 +57,7 @@
     self.navigationItem.standardAppearance = navAppearance;
     self.navigationItem.scrollEdgeAppearance = navAppearance;
     self.navigationController.topViewController.title = LoginTitle;
+    
 }
 
 
