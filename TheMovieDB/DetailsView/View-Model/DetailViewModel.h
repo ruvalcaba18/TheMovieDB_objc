@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fetchCastForTvShowWithId:(NSInteger)showId completion:(void (^)(NSArray *cast,NSError *error))completion ;
 - (NSString *)formattedCreators:(NSArray<Creator *> *)creators;
 - (void)loadImageForShow:(TvShowsPopularModel *)show completion:(void (^)(UIImage *image, NSError *error))completion;
+- (void)loadImageForActor:(id )actor completion:(void (^)(UIImage *image, NSError *error))completion;
 @end
 
 NS_ASSUME_NONNULL_END

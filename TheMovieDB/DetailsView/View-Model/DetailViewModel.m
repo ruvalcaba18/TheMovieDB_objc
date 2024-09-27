@@ -513,7 +513,6 @@
          imageMetaDataUrl = [NSString stringWithFormat:@"%@/%ld/images?api_key=%@", baseMovieImagesURL, (long)identifier, apiKey];
      }
     
-    NSLog(@"Full image url %@",imageMetaDataUrl);
     
     [self performRequestWithURL:imageMetaDataUrl completion:^(NSData *data, NSError *error) {
         if (error) {
@@ -553,6 +552,79 @@
             completion(nil, noImageError);
         }
     }];
+}
+
+- (void)loadImageForActor:(id )actor completion:(void (^)(UIImage *image, NSError *error))completion {
+
+    
+    NSString *profilePath;
+    NSInteger identifier;
+
+    if ([actor isKindOfClass:[Actor class]]) {
+        Actor *actor = (Actor *)actor;
+        profilePath = actor.profilePath;
+        identifier = actor.actorId;
+    } else if ([actor isKindOfClass:[CrewMember class]]) {
+        CrewMember *crewMember = (CrewMember *)actor;
+        profilePath = crewMember.profilePath;
+        identifier = crewMember.crewId;
+    } else {
+        NSError *typeError = [NSError errorWithDomain:@"InvalidEntityError"
+                                                  code:400
+                                              userInfo:@{@"Descripción del error": @"El objeto no es un Actor ni un CrewMember"}];
+        completion(nil, typeError);
+        return;
+    }
+
+    // Cache check
+    UIImage *cachedImage = [self.imageCache objectForKey:profilePath];
+
+    if (cachedImage) {
+        completion(cachedImage, nil);
+        return;
+    }
+
+    NSString *imageMetaDataUrl = [NSString stringWithFormat:@"%@%ld/images?api_key=%@", baseURL, (long)identifier, apiKey];
+    NSLog(@"image from entity image %@", imageMetaDataUrl);
+
+    [self performRequestWithURL:imageMetaDataUrl completion:^(NSData *data, NSError *error) {
+        if (error) {
+            NSLog(@"Error consultando el endpoint de metadatos de imagen: %@", error.localizedDescription);
+            completion(nil, error);
+            return;
+        }
+
+        PostersObject *profileInfo = [self parsePosterData:data];
+
+        if (profileInfo.file_path) {
+            NSString *imageFullURL = [NSString stringWithFormat:@"%@%@", baseImagesURL, profileInfo.file_path];
+
+            [self performRequestWithURL:imageFullURL completion:^(NSData *data, NSError *error) {
+                if (error) {
+                    NSLog(@"Error descargando la imagen: %@", error.localizedDescription);
+                    completion(nil, error);
+                    return;
+                }
+
+                UIImage *downloadedImage = [UIImage imageWithData:data];
+                if (downloadedImage) {
+                    [self.imageCache setObject:downloadedImage forKey:profilePath];
+                    completion(downloadedImage, nil);
+                } else {
+                    NSError *imageError = [NSError errorWithDomain:@"ImageDownloadError"
+                                                              code:500
+                                                          userInfo:@{@"Descripción del error": @"No se pudo descargar la imagen"}];
+                    completion(nil, imageError);
+                }
+            }];
+        } else {
+            NSError *noImageError = [NSError errorWithDomain:@"NoImageError"
+                                                         code:404
+                                                     userInfo:@{@"Descripción del error": @"No se encontró ninguna imagen para el actor o miembro del equipo"}];
+            completion(nil, noImageError);
+        }
+    }];
+    
 }
 
 @end

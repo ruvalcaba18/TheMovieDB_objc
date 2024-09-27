@@ -46,7 +46,6 @@
         if (!error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                           self.castArray = cast;
-                          NSLog(@"Elenco recibido: %@", cast);
                           [self.castCollectionView reloadData];
                       });
         } else {
@@ -106,12 +105,27 @@
     RoundedCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:RoundedCellIdentifier forIndexPath:indexPath];
     
     cell.backgroundColor = [UIColor clearColor];
+    Actor *actor = self.castArray[indexPath.row];
+    
+    cell.nameMemberLabel.text = actor.name ;
+
+    [self.viewModel loadImageForActor:actor completion:^(UIImage * _Nonnull image, NSError * _Nonnull error) {
+        if (image) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+            
+                cell.memberPhoto.image = image;
+            });
+        } else {
+            NSLog(@"Error cargando imagen del actor: %@", error.localizedDescription);
+        }
+    }];
+
     
     return cell;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake(100, 100);
+    return CGSizeMake(200, 200);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {

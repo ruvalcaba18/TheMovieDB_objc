@@ -8,5 +8,4 @@
 #import "CrewMember.h"
 
 @implementation CrewMember
-
 @end

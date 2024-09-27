@@ -8,6 +8,7 @@
 #import "RoundedCollectionViewCell.h"
 
 @implementation RoundedCollectionViewCell
+@synthesize memberPhoto,nameMemberLabel;
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -30,10 +31,11 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    self.contentView.layer.cornerRadius = self.contentView.frame.size.width / 2;
-    self.contentView.layer.masksToBounds = YES;
-    self.contentView.layer.borderWidth = 1.0;
-    self.contentView.layer.borderColor = [UIColor blackColor].CGColor;
+    self.memberPhoto.layer.cornerRadius = self.contentView.frame.size.width / 2;
+    self.memberPhoto.layer.masksToBounds = YES;
+    self.memberPhoto.layer.borderWidth = 1.0;
+    self.memberPhoto.layer.borderColor = [UIColor blackColor].CGColor;
+    
 }
 
 
