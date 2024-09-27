@@ -105,6 +105,7 @@
     RoundedCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:RoundedCellIdentifier forIndexPath:indexPath];
     
     cell.backgroundColor = [UIColor clearColor];
+    
     Actor *actor = self.castArray[indexPath.row];
     
     cell.nameMemberLabel.text = actor.name ;
@@ -112,7 +113,7 @@
     [self.viewModel loadImageForActor:actor completion:^(UIImage * _Nonnull image, NSError * _Nonnull error) {
         if (image) {
             dispatch_async(dispatch_get_main_queue(), ^{
-            
+        
                 cell.memberPhoto.image = image;
             });
         } else {

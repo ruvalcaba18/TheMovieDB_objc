@@ -44,14 +44,14 @@
             break;
             
     }
-   [ self performRequestWithURL:url completion:^(NSData *data, NSError *error) {
-       
+    [ self performRequestWithURL:url completion:^(NSData *data, NSError *error) {
+        
         if (error) {
             NSLog(@"Error %@",error);
         } else {
             [self decodeResponseData:data forOption:option];
         }
-       
+        
     }];
     
     
@@ -59,7 +59,7 @@
 
 
 - (void)fetchCastForTvShowWithId:(NSInteger)showId completion:(void (^)(NSArray *cast,NSError *error))completion {
-  
+    
     NSString *urlString ;
     
     switch (  self.optionSelected) {
@@ -73,8 +73,8 @@
             break;
             
     }
-
-
+    
+    
     [self performRequestWithURL:urlString completion:^(NSData *data, NSError *error) {
         
         if (error) {
@@ -84,7 +84,7 @@
             
             return;
         }
-
+        
         NSError *jsonError;
         NSDictionary *jsonResponse = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
         
@@ -95,7 +95,7 @@
             
             return;
         }
-
+        
         completion([self decodeCastFromJSON: jsonResponse[@"cast"] ],nil);
     }];
 }
@@ -104,7 +104,7 @@
     
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest *request = [NSURLRequest requestWithURL: url cachePolicy: NSURLRequestUseProtocolCachePolicy timeoutInterval: 10.0];
-   
+    
     NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data,
                                                                                                                    NSURLResponse * _Nullable response,
                                                                                                                    NSError * _Nullable error) {
@@ -126,7 +126,7 @@
                 default:
                     break;
             }
-           
+            
         }
     }];
     
@@ -182,7 +182,7 @@
         tvShow.type = jsonResponse[@"type"] != [NSNull null] ? jsonResponse[@"type"] : @"";
         tvShow.voteAverage = jsonResponse[@"vote_average"] != [NSNull null] ? jsonResponse[@"vote_average"] : @0;
         tvShow.voteCount = jsonResponse[@"vote_count"] != [NSNull null] ? [jsonResponse[@"vote_count"] integerValue] : 0;
-
+        
         self.serieDetails = tvShow;
         
     } else if (option == searchMovies) {
@@ -214,9 +214,9 @@
         movie.video = jsonResponse[@"video"] != [NSNull null] ? [jsonResponse[@"video"] boolValue] : NO;
         movie.voteAverage = jsonResponse[@"vote_average"] != [NSNull null] ? jsonResponse[@"vote_average"]  : 0;
         movie.voteCount = jsonResponse[@"vote_count"] != [NSNull null] ? [jsonResponse[@"vote_count"] integerValue] : 0;
-
+        
         self.movieDetails = movie;
-
+        
     }
 }
 
@@ -394,7 +394,7 @@
 }
 
 -(NSArray<Actor *> *)decodeCastFromJSON:(NSArray *)jsonCast {
-
+    
     if ( ![jsonCast isKindOfClass:[NSArray class]] || jsonCast.count <= 0 ){
         NSLog(@"is not a NSArray");
         return nil;
@@ -455,9 +455,9 @@
 - (NSNumber *)roundToSingleDecimal:(NSNumber *)number {
     
     if (![number isKindOfClass:[NSNumber class]]) {
-           NSLog(@"El valor proporcionado no es un NSNumber: %@", number);
-           return @(0);
-       }
+        NSLog(@"El valor proporcionado no es un NSNumber: %@", number);
+        return @(0);
+    }
     
     float roundedValue = roundf(number.floatValue * 10) / 10;
     return @(roundedValue);
@@ -483,7 +483,7 @@
 
 
 - (void)loadImageForShow:(TvShowsPopularModel *)show completion:(void (^)(UIImage *image, NSError *error))completion {
-
+    
     NSString *posterPath;
     NSInteger identifier = 0;
     NSString *originalName;
@@ -504,14 +504,14 @@
         completion(imageCache, nil);
         return;
     }
-     
-     NSString *imageMetaDataUrl;
-     
-     if (show.original_name) {
-         imageMetaDataUrl = [NSString stringWithFormat:@"%@%@/%ld/images?api_key=%@", baseURL, tvShowsEndPoint, (long)identifier, apiKey];
-     } else {
-         imageMetaDataUrl = [NSString stringWithFormat:@"%@/%ld/images?api_key=%@", baseMovieImagesURL, (long)identifier, apiKey];
-     }
+    
+    NSString *imageMetaDataUrl;
+    
+    if (show.original_name) {
+        imageMetaDataUrl = [NSString stringWithFormat:@"%@%@/%ld/images?api_key=%@", baseURL, tvShowsEndPoint, (long)identifier, apiKey];
+    } else {
+        imageMetaDataUrl = [NSString stringWithFormat:@"%@/%ld/images?api_key=%@", baseMovieImagesURL, (long)identifier, apiKey];
+    }
     
     
     [self performRequestWithURL:imageMetaDataUrl completion:^(NSData *data, NSError *error) {
@@ -525,7 +525,7 @@
         
         if (posterInfo.file_path) {
             NSString *imageFullURL = [NSString stringWithFormat:@"%@%@", baseImagesURL, posterInfo.file_path];
-        
+            
             [self performRequestWithURL:imageFullURL completion:^(NSData *data, NSError *error) {
                 if (error) {
                     NSLog(@"Error to download image: %@", error.localizedDescription);
@@ -547,84 +547,50 @@
             }];
         } else {
             NSError *noImageError = [NSError errorWithDomain:@"NoImageError"
-                                                         code:404
-                                                     userInfo:@{@"Error description": @"No image found"}];
+                                                        code:404
+                                                    userInfo:@{@"Error description": @"No image found"}];
             completion(nil, noImageError);
         }
     }];
 }
 
-- (void)loadImageForActor:(id )actor completion:(void (^)(UIImage *image, NSError *error))completion {
-
+- (void)loadImageForActor:(Actor * )actor completion:(void (^)(UIImage *image, NSError *error))completion {
     
     NSString *profilePath;
     NSInteger identifier;
-
-    if ([actor isKindOfClass:[Actor class]]) {
-        Actor *actor = (Actor *)actor;
-        profilePath = actor.profilePath;
-        identifier = actor.actorId;
-    } else if ([actor isKindOfClass:[CrewMember class]]) {
-        CrewMember *crewMember = (CrewMember *)actor;
-        profilePath = crewMember.profilePath;
-        identifier = crewMember.crewId;
-    } else {
-        NSError *typeError = [NSError errorWithDomain:@"InvalidEntityError"
-                                                  code:400
-                                              userInfo:@{@"Descripción del error": @"El objeto no es un Actor ni un CrewMember"}];
-        completion(nil, typeError);
-        return;
-    }
-
-    // Cache check
+    
+    profilePath = actor.profilePath;
+    identifier = actor.actorId;
+    
     UIImage *cachedImage = [self.imageCache objectForKey:profilePath];
-
+    
     if (cachedImage) {
         completion(cachedImage, nil);
         return;
     }
-
-    NSString *imageMetaDataUrl = [NSString stringWithFormat:@"%@%ld/images?api_key=%@", baseURL, (long)identifier, apiKey];
-    NSLog(@"image from entity image %@", imageMetaDataUrl);
-
+    
+    NSString *imageMetaDataUrl = [NSString stringWithFormat:@"%@%@", baseImagesURL, profilePath];
+    
     [self performRequestWithURL:imageMetaDataUrl completion:^(NSData *data, NSError *error) {
         if (error) {
-            NSLog(@"Error consultando el endpoint de metadatos de imagen: %@", error.localizedDescription);
+            NSLog(@"Error descargando la imagen: %@", error.localizedDescription);
             completion(nil, error);
             return;
         }
-
-        PostersObject *profileInfo = [self parsePosterData:data];
-
-        if (profileInfo.file_path) {
-            NSString *imageFullURL = [NSString stringWithFormat:@"%@%@", baseImagesURL, profileInfo.file_path];
-
-            [self performRequestWithURL:imageFullURL completion:^(NSData *data, NSError *error) {
-                if (error) {
-                    NSLog(@"Error descargando la imagen: %@", error.localizedDescription);
-                    completion(nil, error);
-                    return;
-                }
-
-                UIImage *downloadedImage = [UIImage imageWithData:data];
-                if (downloadedImage) {
-                    [self.imageCache setObject:downloadedImage forKey:profilePath];
-                    completion(downloadedImage, nil);
-                } else {
-                    NSError *imageError = [NSError errorWithDomain:@"ImageDownloadError"
-                                                              code:500
-                                                          userInfo:@{@"Descripción del error": @"No se pudo descargar la imagen"}];
-                    completion(nil, imageError);
-                }
-            }];
+        
+        UIImage *downloadedImage = [UIImage imageWithData:data];
+        if (downloadedImage) {
+            [self.imageCache setObject:downloadedImage forKey:profilePath];
+            completion(downloadedImage, nil);
         } else {
-            NSError *noImageError = [NSError errorWithDomain:@"NoImageError"
-                                                         code:404
-                                                     userInfo:@{@"Descripción del error": @"No se encontró ninguna imagen para el actor o miembro del equipo"}];
-            completion(nil, noImageError);
+            NSError *imageError = [NSError errorWithDomain:@"ImageDownloadError"
+                                                      code:500
+                                                  userInfo:@{@"Descripción del error": @"No se pudo descargar la imagen"}];
+            completion(nil, imageError);
         }
     }];
     
+
 }
 
 @end
