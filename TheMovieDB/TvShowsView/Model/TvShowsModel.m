@@ -8,6 +8,7 @@
 #import "TvShowsModel.h"
 
 @interface TvShowsModel()
+@property (atomic, strong, nullable) DatesModel *dates;
 @property (atomic, strong) NSNumber *pageNumber;
 @property (atomic, strong) NSArray *result;
 @property (atomic, strong) NSNumber *total_pages;
@@ -44,16 +45,30 @@
         tvShow.identifier = dicc[@"id"];
         tvShow.origin_contry = dicc[@"origin_country"];
         tvShow.original_language = dicc[@"original_language"];
-        tvShow.original_name = dicc[@"original_name"];
+        
+        
+        if ( dicc[@"original_name"]) {
+            
+            tvShow.original_name = dicc[@"original_name"];
+            tvShow.first_air_date = dicc[@"first_air_date"];
+            tvShow.name = dicc[@"name"];
+        } else {
+            
+            tvShow.original_title = dicc[@"original_title"];
+            tvShow.title = dicc[@"title"];
+            tvShow.release_date = dicc[@"release_date"];
+        }
+      
         tvShow.overview = dicc[@"overview"];
         tvShow.popularity = dicc[@"popularity"];
         tvShow.poster_path = dicc[@"poster_path"];
-        tvShow.first_air_date = dicc[@"first_air_date"];
-        tvShow.name = dicc[@"name"];
+    
         tvShow.vote_average = dicc[@"vote_average"];
         tvShow.vote_count = dicc[@"vote_count"];
         [allTvShows addObject:tvShow];
     }
     return allTvShows;
 }
+
+
 @end

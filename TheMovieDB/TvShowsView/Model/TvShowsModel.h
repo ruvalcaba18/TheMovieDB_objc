@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "TVShowsPopularModel.h"
+#import "DatesModel/DatesModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TvShowsModel : NSObject

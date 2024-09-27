@@ -20,10 +20,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (atomic, strong) NSString *overview;
 @property (atomic, assign) NSNumber *popularity;
 @property (atomic, strong) NSString *poster_path;
-@property (atomic, strong) NSString *first_air_date;
+@property (atomic, strong,) NSString *first_air_date;
 @property (atomic, strong) NSString *name;
 @property (atomic, strong) NSNumber *vote_average;
 @property (atomic, strong) NSNumber *vote_count;
+@property (atomic, assign) BOOL video;
+@property (atomic, strong) NSString *title;
+@property (atomic, strong) NSString *original_title;
+@property (atomic,strong) NSString *release_date;
 @end
 
 NS_ASSUME_NONNULL_END

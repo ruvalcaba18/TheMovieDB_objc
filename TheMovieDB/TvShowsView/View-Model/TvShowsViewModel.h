@@ -21,11 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSMutableArray *popularTvShows;
 
--(instancetype)initTvShowsViewModel;
--(void)starFetchFirstOption:(OptionToSearch)option;
--(void)retrieveFilterSelected:(TopFilter)filterOption;
--(void) loadImageForTvShows:(TvShowsPopularModel *)tvShow completion:(void (^)(UIImage *image, NSError *error)) completion ;
--(NSString *)getDateCorrectFormat:(NSString *)dateToGiveFormat;
+-(instancetype)initViewModel;
+-(void)fetchShowsWithSearchOption:(OptionToSearch)option;
+-(void)applyFilter:(TopFilter)filterOption;
+-(void) loadImageForShow:(TvShowsPopularModel *)tvShow completion:(void (^)(UIImage *image, NSError *error)) completion ;
+-(NSString *)formatDate:(NSString *)dateToGiveFormat;
 @end
 
 NS_ASSUME_NONNULL_END

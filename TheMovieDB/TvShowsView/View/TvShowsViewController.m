@@ -9,37 +9,53 @@
 
 @interface TvShowsViewController ()
 
-@property (atomic, strong) TvShowsViewModel *viewModel;
-@property (atomic, strong) SelectOptionView *selectOptionView;
-@property (atomic, assign) OptionToSearch option;
+@property (nonatomic, strong) TvShowsViewModel *viewModel;
+@property (nonatomic, strong) SelectOptionView *selectOptionView;
+@property (nonatomic, assign) OptionToSearch selectedOption;
+@property (nonatomic, assign) BOOL isOptionSelected;
 
--(void)displayError;
--(void)updateSegmentController;
--(void)setUpOptionView;
--(void)setUpCollectionView ;
--(void)selectOptionToRetrieve:(UISegmentedControl *) sender;
--(void)subscribeToNotification;
--(void)setUpNavigation;
+- (void)showError;
+- (void)configureSegmentController;
+- (void)configureOptionView;
+- (void)configureCollectionView;
+- (void)optionChanged:(UISegmentedControl *)sender;
+- (void)subscribeToNotifications;
+- (void)configureNavigationBar;
+
 @end
-
 @implementation TvShowsViewController
-@synthesize tvSegmentControl,tvShowsCollectionView,viewModel,optionContainer,selectOptionView;
+
+@synthesize tvSegmentControl, tvShowsCollectionView, viewModel, optionContainer, selectOptionView, selectedOption;
+
+#pragma mark - View Lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self setUpViewController];
-    [self setUpCollectionView];
-    [self.viewModel starFetchFirstOption:searchTvShows];
-    [self updateSegmentController];
-    [self subscribeToNotification];
-    [self setUpNavigation];
+    [self initializeViewController];
+    [self configureCollectionView];
+    [self configureSegmentController];
+    [self subscribeToNotifications];
+    [self configureNavigationBar];
+    self.isOptionSelected = NO;
+    
 }
 
+#pragma mark - Setup Methods
 
-#pragma mark: - Private functions
+- (void)initializeViewController {
+    
+    self.selectOptionView = [[SelectOptionView alloc] init];
+    self.viewModel = [[TvShowsViewModel alloc] initViewModel];
+    [self.optionContainer addSubview:self.selectOptionView];
+    [self.view bringSubviewToFront:self.optionContainer];
+    [self configureOptionView];
+    [self configureSegmentController];
+    
+}
 
--(void)setUpNavigation {
+- (void)configureNavigationBar {
+    
     UINavigationBarAppearance *navAppearance = [UINavigationBarAppearance new];
     [navAppearance configureWithTransparentBackground];
     navAppearance.backgroundColor = [UIColor blackColor];
@@ -47,147 +63,182 @@
     NSDictionary *titleTextAttributes = @{
         NSForegroundColorAttributeName: [UIColor whiteColor],
         NSFontAttributeName: [UIFont boldSystemFontOfSize:16.0]
-    } ;
+    };
     
     navAppearance.titleTextAttributes = titleTextAttributes;
     self.navigationItem.standardAppearance = navAppearance;
     self.navigationItem.scrollEdgeAppearance = navAppearance;
 }
 
--(void)setUpCollectionView {
+- (void)configureCollectionView {
+    
     self.tvShowsCollectionView.delegate = self;
     self.tvShowsCollectionView.dataSource = self;
-    [self.tvShowsCollectionView registerNib:[UINib nibWithNibName: @"TvShowCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:tvShowCellIdentifier];
+    [self.tvShowsCollectionView registerNib:[UINib nibWithNibName:@"TvShowCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:tvShowCellIdentifier];
 }
 
--(void)setUpViewController {
-    self.selectOptionView = [[SelectOptionView alloc] init];
-    self.viewModel = [[TvShowsViewModel alloc] initTvShowsViewModel];
-    [self.optionContainer addSubview:self.selectOptionView];
-    [self.view bringSubviewToFront:self.optionContainer];
-    [self setUpOptionView];
-    [self updateSegmentController];
-}
-
--(void)setUpOptionView {
-    self.selectOptionView.translatesAutoresizingMaskIntoConstraints = NO;
-    NSLayoutConstraint *top = [self.selectOptionView.topAnchor constraintEqualToAnchor:self.optionContainer.topAnchor];
-    NSLayoutConstraint *bottom = [self.selectOptionView.bottomAnchor constraintEqualToAnchor:self.optionContainer.bottomAnchor];
-    NSLayoutConstraint *leading = [self.selectOptionView.leadingAnchor constraintEqualToAnchor:self.optionContainer.leadingAnchor];
-    NSLayoutConstraint *trailling = [self.selectOptionView.trailingAnchor constraintEqualToAnchor:self.optionContainer.trailingAnchor];
+- (void)configureOptionView {
     
-    top.active = YES;
-    bottom.active = YES;
-    leading.active = YES;
-    trailling.active = YES;
+    self.selectOptionView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [self.selectOptionView.topAnchor constraintEqualToAnchor:self.optionContainer.topAnchor],
+        [self.selectOptionView.bottomAnchor constraintEqualToAnchor:self.optionContainer.bottomAnchor],
+        [self.selectOptionView.leadingAnchor constraintEqualToAnchor:self.optionContainer.leadingAnchor],
+        [self.selectOptionView.trailingAnchor constraintEqualToAnchor:self.optionContainer.trailingAnchor]
+    ]];
+    
 }
 
--(void)subscribeToNotification {
-    [[NSNotificationCenter defaultCenter]  addObserver:self
-                                              selector:@selector(handleOptionSelected:)
-                                                  name:@"MovieOptionSelected"
-                                                object:nil];
+- (void)subscribeToNotifications {
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleOptionSelected:)
+                                                 name:@"MovieOptionSelected"
+                                               object:nil];
 }
 
--(void)handleOptionSelected:(NSNotification *)notification {
+#pragma mark - Actions
+
+- (void)handleOptionSelected:(NSNotification *)notification {
     
     NSDictionary *userInfo = notification.userInfo;
-    OptionToSearch selectedOption = [userInfo[@"Option"] integerValue];
-    __weak typeof(self) weakSelf = self;
-    [weakSelf.selectOptionView removeFromSuperview];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        
-        switch (selectedOption) {
-            case 0: {
-                weakSelf.title = TvShowsTitle;
-                weakSelf.stackSegmenContainer.hidden = NO;
-                break;
-            }
-            case 1: {
-                weakSelf.title = MovieTitle;
-                weakSelf.stackSegmenContainer.hidden = NO;
-                break;
-            }
-            default:
-                break;
-        }
-    });
-    
+    self.selectedOption = [userInfo[@"Option"] integerValue];
+    self.tvSegmentControl.hidden = NO;
+    [self loadDataForSelectedOption:self.selectedOption isOptionSelected:YES];
+    self.isOptionSelected = YES;
+    [self.selectOptionView removeFromSuperview];
+
 }
 
-- (void)displayError {
-    // TODO: make display error
-}
-
-- (void)updateSegmentController {
-    NSDictionary *normalAndSelectedAttributes = @{ NSForegroundColorAttributeName : [UIColor whiteColor]};
-    [self.tvSegmentControl setTitleTextAttributes:normalAndSelectedAttributes forState:UIControlStateNormal];
-    [self.tvSegmentControl setTitleTextAttributes:normalAndSelectedAttributes forState:UIControlStateSelected];
-    [self.tvSegmentControl addTarget:self action:@selector(selectOptionToRetrieve:) forControlEvents: UIControlEventValueChanged];
-}
-
--(void)selectOptionToRetrieve:(UISegmentedControl *) sender {
+- (void)loadDataForSelectedOption:(OptionToSearch)option isOptionSelected:(BOOL)isSelected{
     
-    NSInteger selectedIndex = sender.selectedSegmentIndex;
-    switch (selectedIndex) {
-        case 0:
-            [self.viewModel retrieveFilterSelected: SearchPopularMovies];
-            break;
-        case 1:
-            [self.viewModel retrieveFilterSelected: SearchTopRatedMovies];
-            break;
-        case 2:
-            [self.viewModel retrieveFilterSelected: SearchOnTvShows];
-            break;
-        case 3:
-            [self.viewModel retrieveFilterSelected: SearchAiringTodayShows];
-            break;
-        default:
-            break;
+    if (isSelected) {
+        [self.viewModel fetchShowsWithSearchOption: self.selectedOption];
+        [self updateTitle];
     }
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-#pragma mark: - Collection view Delegate and Data source
-
-- (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [self.viewModel.popularTvShows count];
-}
-
-- (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
+- (void)updateTitle {
     
-    TvShowCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: tvShowCellIdentifier forIndexPath:indexPath];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.title = self.selectedOption == 0 ? TvShowsTitle : MovieTitle;
+        self.tvSegmentControl.layer.mask = nil;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tvShowsCollectionView reloadData];
+        });
+
+    });
+}
+
+- (void)showError {
+    // TODO: Implement error handling
+}
+
+- (void)configureSegmentController {
+    
+    self.tvSegmentControl.hidden = YES;
+    NSDictionary *attributes = @{ NSForegroundColorAttributeName : [UIColor whiteColor] };
+    [self.tvSegmentControl setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    [self.tvSegmentControl setTitleTextAttributes:attributes forState:UIControlStateSelected];
+    [self.tvSegmentControl addTarget:self action:@selector(optionChanged:) forControlEvents:UIControlEventValueChanged];
+    
+    [self applySegmentControlShimmerEffect];
+    
+}
+
+- (void)applySegmentControlShimmerEffect {
+    
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    
+    gradientLayer.frame = self.tvSegmentControl.bounds;
+    
+    gradientLayer.colors = @[ (id)[UIColor clearColor].CGColor,
+                              (id)[UIColor colorWithWhite:1.0 alpha:0.5].CGColor,
+                              (id)[UIColor clearColor].CGColor ];
+    
+    gradientLayer.locations = @[ @0.2, @0.5, @0.8 ];
+    gradientLayer.startPoint = CGPointMake(0.0, 0.5);
+    gradientLayer.endPoint = CGPointMake(1.0, 0.5);
+    self.tvSegmentControl.layer.mask = gradientLayer;
+    
+    CABasicAnimation *shimmerAnimation = [CABasicAnimation animationWithKeyPath:@"transform.translation.x"];
+    shimmerAnimation.duration = 1.0;
+    shimmerAnimation.fromValue = @(-self.tvSegmentControl.bounds.size.width);
+    shimmerAnimation.toValue = @(self.tvSegmentControl.bounds.size.width);
+    shimmerAnimation.repeatCount = HUGE_VALF;
+    [gradientLayer addAnimation:shimmerAnimation forKey:@"ShimmerAnimation"];
+}
+
+- (void)optionChanged:(UISegmentedControl *)sender {
+    NSInteger selectedIndex = sender.selectedSegmentIndex;
+    TopFilter option;
+    
+    switch (selectedIndex) {
+        case 0:
+            option = SearchPopularMovies;
+            break;
+        case 1:
+            option = SearchTopRatedMovies;
+            break;
+        case 2:
+            option = SearchOnTvShows;
+            break;
+        case 3:
+            option = SearchAiringTodayShows;
+            break;
+        default:
+            return;
+    }
+    
+    [self.viewModel applyFilter:option];
+}
+
+#pragma mark - Collection View Delegate and DataSource
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    
+    return self.isOptionSelected ? MAX(self.viewModel.popularTvShows.count, 10) : 10;
+    
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    TvShowCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:tvShowCellIdentifier forIndexPath:indexPath];
     cell.layer.masksToBounds = YES;
     cell.layer.cornerRadius = 15;
-    TvShowsPopularModel *tvShow = self.viewModel.popularTvShows[indexPath.row];
+    
+    TvShowsPopularModel *tvShow = self.isOptionSelected ? self.viewModel.popularTvShows[indexPath.row] : nil;
     [cell addShimmerEffect];
     
-    [self.viewModel loadImageForTvShows:tvShow completion:^(UIImage * _Nonnull image, NSError * _Nonnull error) {
+    [self.viewModel loadImageForShow:tvShow completion:^(UIImage *image, NSError *error) {
         
         if (error) {
-            // TODO: Make error view
+            // TODO: Show error view
         }
-        
         if (image) {
             
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                cell.moviePoster.image = image;
-                cell.movieTitle.text = tvShow.name;
-                cell.movieDescriptionLabel.text = tvShow.overview.length == 0 ? @"No description" : tvShow.overview ;
-                cell.moviePopularityLabel.text = [NSString stringWithFormat:@"★ %@",tvShow.vote_average];
-                cell.movieReleaseDateLabel.text = [self.viewModel getDateCorrectFormat:tvShow.first_air_date];
-                [cell removeShimmerEffect];
-            });
-           
+            [self configureCell:cell withImage:image andShow:tvShow];
         }
+        
     }];
     
     return cell;
+}
+
+- (void)configureCell:(TvShowCollectionViewCell *)cell withImage:(UIImage *)image andShow:(TvShowsPopularModel *)tvShow {
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        cell.moviePoster.image = image;
+        cell.movieTitle.text = tvShow.name ?: tvShow.title;
+        cell.movieDescriptionLabel.text = tvShow.overview.length > 0 ? tvShow.overview : @"No description";
+        cell.moviePopularityLabel.text = [NSString stringWithFormat:@"★ %@", tvShow.vote_average];
+        cell.movieReleaseDateLabel.text = [self.viewModel formatDate:tvShow.first_air_date ?: tvShow.release_date];
+        
+        [cell removeShimmerEffect];
+        
+    });
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -198,18 +249,26 @@
     [self.navigationController pushViewController:detailView animated:YES];
 }
 
+#pragma mark - Collection View Flow Layout
 
-#pragma mark: - Collection view flow layout
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
     return CGSizeMake(175, 350);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
-    return 7;
     
+    return 7;
 }
+
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
+    
     return UIEdgeInsetsMake(16, 4, 0, 4);
+}
+
+- (void)dealloc {
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end
