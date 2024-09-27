@@ -6,10 +6,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OptiontoSearch.h"
+#import "Constants.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DetailViewModel : NSObject
+
+@property (nonatomic, strong) NSMutableArray *showDetails;
+
+-(instancetype)initDetailViewModel;
+-(void)fetchDetailsWithOption:(OptionToSearch)option andIdentifier:(NSString *)identifier ;
 
 @end
 

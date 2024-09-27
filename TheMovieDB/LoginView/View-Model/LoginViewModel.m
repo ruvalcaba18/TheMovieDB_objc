@@ -9,9 +9,7 @@
 
 #pragma mark: - Private methods declaration
 @interface LoginViewModel()
-
 @property (atomic, strong) NSMutableArray<User *> * users;
-
 -(BOOL)checkValidUsername:(NSString *_Nonnull)username andValidPassword:(NSString *_Nonnull) password;
 -(void)retrieveUsersFromJsonFile;
 
@@ -19,7 +17,7 @@
 
 #pragma mark: - Implementation
 @implementation LoginViewModel
-@synthesize users;
+@synthesize users,testusers;
 
 -(instancetype)initViewModel {
     self = [super init];

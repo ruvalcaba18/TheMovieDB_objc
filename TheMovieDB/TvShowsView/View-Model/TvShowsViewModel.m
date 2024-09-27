@@ -97,12 +97,12 @@
             break;
         }
     }
-    [self.popularTvShows removeAllObjects];
+   
     [self performRequestWithURL:url completion:^(NSData *data, NSError *error) {
         if (error) {
             
         } else {
-           
+            [self.popularTvShows removeAllObjects];
             self.popularTvShows = [self parseTvShowData:data];
         }
     }];
@@ -196,7 +196,6 @@
     }];
     [dataTask resume];
 }
-
 
 
 #pragma mark: - Decoders

@@ -8,24 +8,49 @@
 #import "DetailShowViewController.h"
 
 @interface DetailShowViewController ()
-
+@property (atomic, strong) DetailViewModel *viewModel;
+-(void)setupContainerView;
+-(void)setupCastCollectionView;
 @end
 
 @implementation DetailShowViewController
-@synthesize selectedShow;
+@synthesize selectedShow,showPosterImage,showContainerDescriptionView,castContainerView,castCollectionView,optionSelected,viewModel;
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
-    [self.navigationController.navigationBar setTranslucent:YES];
-       [self.navigationController.navigationBar setBackgroundColor:[UIColor clearColor]];
-       [self.navigationController.navigationBar setShadowImage:[[UIImage alloc] init]];
-       [self.navigationController.navigationBar setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
+    
+    [self setupContainerView];
+//    [self setupCastCollectionView];
+    [self.viewModel fetchDetailsWithOption:self.optionSelected andIdentifier: [self.selectedShow.identifier stringValue] ];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:animated];
+#pragma mark - Setup Methods
+
+-(void)setupContainerView {
+    
+    self.showContainerDescriptionView.layer.cornerRadius = 20;
+    self.showContainerDescriptionView.clipsToBounds = YES;
+    self.viewModel = [[DetailViewModel alloc] initDetailViewModel];
 }
+
+-(void)setupCastCollectionView {
+    self.castCollectionView.delegate = self;
+    self.castCollectionView.dataSource = self;
+}
+
+#pragma mark - Collection View Delegate and DataSource
+
+//- (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+//    
+//}
+//
+//
+//- (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
+//    
+//}
+
+
 
 
 @end
