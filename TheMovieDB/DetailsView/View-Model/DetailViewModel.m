@@ -44,7 +44,6 @@
             break;
             
     }
-    NSLog(@"fulll url %@",url);
    [ self performRequestWithURL:url completion:^(NSData *data, NSError *error) {
        
         if (error) {
@@ -54,12 +53,15 @@
         }
        
     }];
+    
+    
 }
 
 
 - (void)fetchCastForTvShowWithId:(NSInteger)showId completion:(void (^)(NSArray *cast,NSError *error))completion {
   
     NSString *urlString ;
+    
     switch (  self.optionSelected) {
             
         case searchTvShows:
@@ -94,7 +96,7 @@
             return;
         }
 
-        [self decodeCastFromJSON: jsonResponse[@"cast"] ];
+        completion([self decodeCastFromJSON: jsonResponse[@"cast"] ],nil);
     }];
 }
 
@@ -221,7 +223,7 @@
 
 - (NSArray<Genre *> *)decodeGenresFromJSON:(NSArray *)jsonArray {
     
-    if ( ![jsonArray isKindOfClass:[NSDictionary class]] || jsonArray.count <= 0 ){
+    if ( ![jsonArray isKindOfClass:[NSArray class]] || jsonArray.count <= 0 ){
         return nil;
     }
     
@@ -244,7 +246,7 @@
     
     NSMutableArray *companiesArray = [NSMutableArray array];
     
-    if (![jsonCompanies isKindOfClass:[NSDictionary class]] || jsonCompanies.count <= 0 ){
+    if (![jsonCompanies isKindOfClass:[NSArray class]] || jsonCompanies.count <= 0 ){
         return nil;
     }
     
@@ -265,7 +267,7 @@
 
 - (NSArray<ProductionCountry *> *)decodeProductionCountriesFromJSON:(NSArray *)jsonCountries {
     
-    if ( ![jsonCountries isKindOfClass:[NSDictionary class]] || jsonCountries.count <= 0 ){
+    if ( ![jsonCountries isKindOfClass:[NSArray class]] || jsonCountries.count <= 0 ){
         return nil;
     }
     
@@ -285,7 +287,7 @@
 
 - (NSArray<SpokenLanguage *> *)decodeSpokenLanguagesFromJSON:(NSArray *)jsonLanguages {
     
-    if (  ![jsonLanguages isKindOfClass:[NSDictionary class]] || jsonLanguages.count <= 0 ){
+    if (  ![jsonLanguages isKindOfClass:[NSArray class]] || jsonLanguages.count <= 0 ){
         return nil;
     }
     
@@ -307,7 +309,7 @@
 
 - (NSArray<Creator *> *)decodeCreatorsFromJSON:(NSArray *)jsonCreators {
     
-    if (![jsonCreators isKindOfClass:[NSDictionary class]] || jsonCreators.count <= 0 ){
+    if (![jsonCreators isKindOfClass:[NSArray class]] || jsonCreators.count <= 0 ){
         return nil;
     }
     
@@ -346,7 +348,7 @@
 
 - (NSArray<NetworkModel *> *)decodeNetworksFromJSON:(NSArray *)jsonNetworks {
     
-    if ( ![jsonNetworks isKindOfClass:[NSDictionary class]] || jsonNetworks.count <= 0 ){
+    if ( ![jsonNetworks isKindOfClass:[NSArray class]] || jsonNetworks.count <= 0 ){
         return nil;
     }
     
@@ -369,7 +371,7 @@
 
 - (NSArray<Season *> *)decodeSeasonsFromJSON:(NSArray *)jsonSeasons {
     
-    if ( ![jsonSeasons isKindOfClass:[NSDictionary class]] || jsonSeasons.count <= 0 ){
+    if ( ![jsonSeasons isKindOfClass:[NSArray class]] || jsonSeasons.count <= 0 ){
         return nil;
     }
     
@@ -392,21 +394,45 @@
 }
 
 -(NSArray<Actor *> *)decodeCastFromJSON:(NSArray *)jsonCast {
-    
-    if ( ![jsonCast isKindOfClass:[NSDictionary class]] || jsonCast.count <= 0 ){
+
+    if ( ![jsonCast isKindOfClass:[NSArray class]] || jsonCast.count <= 0 ){
+        NSLog(@"is not a NSArray");
         return nil;
     }
     
     NSMutableArray *castList = [NSMutableArray array];
-    
     for (NSDictionary *castMemberDict in jsonCast) {
         
         Actor *castMember = [[Actor alloc] initWithDictionary:castMemberDict];
-        
         [castList addObject:castMember];
     }
-    
     return castList;
+}
+
+
+-(PostersObject *)parsePosterData:(NSData *)posterData {
+    
+    NSError *jsonError;
+    NSDictionary *dataDicc = [NSJSONSerialization JSONObjectWithData:posterData options:0 error:&jsonError];
+    
+    if (jsonError) {
+        
+        NSLog(@"Error to decode the json : %@",jsonError.localizedDescription);
+        
+        return nil;
+    }
+    
+    NSArray *postersArray = dataDicc[@"posters"];
+    
+    if(postersArray.count > 0 ) {
+        
+        NSDictionary *firstPoster = postersArray.firstObject;
+        PostersObject *posterInfo = [[PostersObject alloc] init];
+        posterInfo.file_path = firstPoster[@"file_path"];
+        return posterInfo;
+        
+    }
+    return nil;
 }
 
 #pragma mark: - functions that transform variables
@@ -453,6 +479,80 @@
     }
     
     return [NSString stringWithFormat:@"Created by: %@", [creatorNames componentsJoinedByString:@", "]];
+}
+
+
+- (void)loadImageForShow:(TvShowsPopularModel *)show completion:(void (^)(UIImage *image, NSError *error))completion {
+
+    NSString *posterPath;
+    NSInteger identifier = 0;
+    NSString *originalName;
+    
+    if (show.name) {
+        posterPath = show.poster_path;
+        identifier = [show.identifier integerValue];
+        originalName = show.original_name;
+    } else if (show.title) {
+        posterPath = show.poster_path;
+        identifier = [show.identifier integerValue];
+        originalName = show.original_title;
+    }
+    
+    UIImage *imageCache = [self.imageCache objectForKey:posterPath];
+    
+    if (imageCache) {
+        completion(imageCache, nil);
+        return;
+    }
+     
+     NSString *imageMetaDataUrl;
+     
+     if (show.original_name) {
+         imageMetaDataUrl = [NSString stringWithFormat:@"%@%@/%ld/images?api_key=%@", baseURL, tvShowsEndPoint, (long)identifier, apiKey];
+     } else {
+         imageMetaDataUrl = [NSString stringWithFormat:@"%@/%ld/images?api_key=%@", baseMovieImagesURL, (long)identifier, apiKey];
+     }
+    
+    NSLog(@"Full image url %@",imageMetaDataUrl);
+    
+    [self performRequestWithURL:imageMetaDataUrl completion:^(NSData *data, NSError *error) {
+        if (error) {
+            NSLog(@"Error to consult endpoint metadata: %@", error.localizedDescription);
+            completion(nil, error);
+            return;
+        }
+        
+        PostersObject *posterInfo = [self parsePosterData:data];
+        
+        if (posterInfo.file_path) {
+            NSString *imageFullURL = [NSString stringWithFormat:@"%@%@", baseImagesURL, posterInfo.file_path];
+        
+            [self performRequestWithURL:imageFullURL completion:^(NSData *data, NSError *error) {
+                if (error) {
+                    NSLog(@"Error to download image: %@", error.localizedDescription);
+                    completion(nil, error);
+                    return;
+                }
+                
+                UIImage *downloadedImage = [UIImage imageWithData:data];
+                
+                if (downloadedImage) {
+                    [self.imageCache setObject:downloadedImage forKey:posterPath];
+                    completion(downloadedImage, nil);
+                } else {
+                    NSError *imageError = [NSError errorWithDomain:@"ImageDownloadError"
+                                                              code:500
+                                                          userInfo:@{@"Error description": @"we cannot download the image"}];
+                    completion(nil, imageError);
+                }
+            }];
+        } else {
+            NSError *noImageError = [NSError errorWithDomain:@"NoImageError"
+                                                         code:404
+                                                     userInfo:@{@"Error description": @"No image found"}];
+            completion(nil, noImageError);
+        }
+    }];
 }
 
 @end

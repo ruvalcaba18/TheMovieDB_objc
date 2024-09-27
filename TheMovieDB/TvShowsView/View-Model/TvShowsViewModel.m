@@ -219,8 +219,6 @@
 }
 
 
-
-
 -(PostersObject *)parsePosterData:(NSData *)posterData {
     
     NSError *jsonError;

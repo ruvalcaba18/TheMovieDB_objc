@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *tagline;
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, assign) BOOL video;
-@property (nonatomic, assign) NSNumber* voteAverage;
+@property (nonatomic, strong) NSNumber* voteAverage;
 @property (nonatomic, assign) NSInteger voteCount;
 
 @end

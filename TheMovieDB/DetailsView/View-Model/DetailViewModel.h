@@ -20,7 +20,9 @@
 #import "SpokenLanguage.h"
 #import "ShowDetail.h"
 #import "Actor.h"
-
+#import "UIKit/UIKit.h"
+#import "PostersObject.h"
+#import "TvShowsPopularModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -35,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString *)formatDate:(NSString *)dateToGiveFormatt;
 - (void)fetchCastForTvShowWithId:(NSInteger)showId completion:(void (^)(NSArray *cast,NSError *error))completion ;
 - (NSString *)formattedCreators:(NSArray<Creator *> *)creators;
+- (void)loadImageForShow:(TvShowsPopularModel *)show completion:(void (^)(UIImage *image, NSError *error))completion;
 @end
 
 NS_ASSUME_NONNULL_END
