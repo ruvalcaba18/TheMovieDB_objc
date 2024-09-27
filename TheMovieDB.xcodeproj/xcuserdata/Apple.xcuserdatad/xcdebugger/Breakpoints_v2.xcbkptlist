@@ -23,16 +23,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "BC5BD36C-7879-4C8C-8B19-55930221D6AE"
+            uuid = "AFA3AD09-A6AC-4160-B40F-0053AF29E471"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TheMovieDB/DetailsView/View/DetailShowViewController.m"
+            filePath = "TheMovieDB/DetailsView/View-Model/DetailViewModel.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "24"
-            endingLineNumber = "24"
-            landmarkName = "-viewDidLoad"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
+            landmarkName = "-decodeResponseData:forOption:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

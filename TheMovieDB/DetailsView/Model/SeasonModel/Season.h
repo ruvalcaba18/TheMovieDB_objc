@@ -10,6 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface Season : NSObject
+
 @property (nonatomic, strong) NSString *airDate;
 @property (nonatomic, assign) NSInteger episodeCount;
 @property (nonatomic, assign) NSInteger seasonId;
@@ -17,7 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *overview;
 @property (nonatomic, strong) NSString *posterPath;
 @property (nonatomic, assign) NSInteger seasonNumber;
-@property (nonatomic, assign) NSNumber* voteAverage;
+@property (nonatomic, strong) NSNumber* voteAverage;
+
 @end
 
 NS_ASSUME_NONNULL_END

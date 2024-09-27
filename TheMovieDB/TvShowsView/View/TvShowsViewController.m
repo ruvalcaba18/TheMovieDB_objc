@@ -280,7 +280,7 @@
     TvShowsPopularModel *selectedTvShow = self.viewModel.popularTvShows[indexPath.row];
     DetailShowViewController *detailView = [[DetailShowViewController alloc] init];
     detailView.selectedShow = selectedTvShow;
-    detailView.optionSelected  = self.selectedOption;
+    detailView.selectedOption  = self.selectedOption;
     [self.navigationController pushViewController:detailView animated:YES];
 }
 

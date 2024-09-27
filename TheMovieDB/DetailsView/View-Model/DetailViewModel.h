@@ -18,18 +18,23 @@
 #import "ProductionCompany.h"
 #import "ProductionCountry.h"
 #import "SpokenLanguage.h"
-#import "CastMember.h"
+#import "ShowDetail.h"
+#import "Actor.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DetailViewModel : NSObject
 
+@property (nonatomic,strong) TvSerie * serieDetails;
+@property (nonatomic,strong) MovieDetails * movieDetails;
+
 -(instancetype)initDetailViewModel;
 - (void)fetchDetailsWithOption:(OptionToSearch)option andIdentifier:(NSString *)identifier ;
-- (NSNumber *)roundToSingleDecimal:(NSNumber *)number;
+- (NSNumber *)roundToSingleDecimal:(NSNumber *_Nullable )number;
 -(NSString *)formatDate:(NSString *)dateToGiveFormatt;
-
+- (void)fetchCastForTvShowWithId:(NSInteger)showId completion:(void (^)(NSArray *cast,NSError *error))completion ;
+- (NSString *)formattedCreators:(NSArray<Creator *> *)creators;
 @end
 
 NS_ASSUME_NONNULL_END

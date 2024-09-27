@@ -50,7 +50,7 @@
     
     [self performRequestWithURL:url completion:^(NSData *data, NSError *error) {
         if (error) {
-            NSLog(@"Error %@",error);
+            NSLog(@"Error %@",error.localizedDescription);
         } else {
             self.popularTvShows = [self parseTvShowData:data];
         }
@@ -130,7 +130,7 @@
     [self performRequestWithURL: imageMetaDataUrl completion:^(NSData *data, NSError *error) {
         
         if(error) {
-            NSLog(@"Error to consult endpoint metadata : %@",error);
+            NSLog(@"Error to consult endpoint metadata : %@",error.localizedDescription);
             completion(nil,error);
             return ;
         }
@@ -146,7 +146,7 @@
                 
                 if(error) {
                     
-                    NSLog(@"Error to download image: %@",error);
+                    NSLog(@"Error to download image: %@",error.localizedDescription);
                     completion(nil,error);
                     return;
                 }
@@ -205,7 +205,9 @@
     NSDictionary *jsonInformation = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
     
     if (jsonError) {
-        NSLog(@"JSON Error: %@",jsonError);
+        
+        NSLog(@"JSON Error: %@",jsonError.localizedDescription);
+        
         return nil;
     }
     
@@ -225,7 +227,9 @@
     NSDictionary *dataDicc = [NSJSONSerialization JSONObjectWithData:posterData options:0 error:&jsonError];
     
     if (jsonError) {
-        NSLog(@"Error to decode the json : %@",jsonError);
+        
+        NSLog(@"Error to decode the json : %@",jsonError.localizedDescription);
+        
         return nil;
     }
     

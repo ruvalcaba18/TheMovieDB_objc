@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *status;
 @property (nonatomic, strong) NSString *tagline;
 @property (nonatomic, strong) NSString *type;
-@property (nonatomic, assign) NSNumber* voteAverage;
+@property (nonatomic, strong) NSNumber* voteAverage;
 @property (nonatomic, assign) NSInteger voteCount;
 
 @end

@@ -24,6 +24,7 @@ NSString* const movieNowPlayingEndpoint = @"include_adult=true&include_video=tru
 NSString* const movieUpcomingEndpoint = @"include_adult=true&include_video=true&language=en-US&page=1&sort_by=popularity.desc&with_release_type=2|3&release_date.gte={min_date}&release_date.lte={max_date}";
 NSString* const apiKey = @"b64d7f3ead34bfc2d9ade2eb40d81e37";
 NSString* const tvShowCellIdentifier = @"tvShowCustomCellIdentifier";
+NSString* const RoundedCellIdentifier = @"RoundedCellIdentifier";
 NSString* const LoginTitle = @"Login";
 NSString* const TvShowsTitle = @"Tv shows";
 NSString* const MovieTitle = @"Movie Shows";
