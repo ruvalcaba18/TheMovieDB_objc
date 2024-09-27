@@ -27,3 +27,4 @@ NSString* const tvShowCellIdentifier = @"tvShowCustomCellIdentifier";
 NSString* const LoginTitle = @"Login";
 NSString* const TvShowsTitle = @"Tv shows";
 NSString* const MovieTitle = @"Movie Shows";
+NSString* const creditsEndPoint = @"credits";

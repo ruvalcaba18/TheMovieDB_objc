@@ -243,6 +243,7 @@
 }
 
 #pragma mark: - functions that transform variables
+
 -(NSString *)formatDate:(NSString *)dateToGiveFormatt {
     
     NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
@@ -257,4 +258,12 @@
     NSString *formattedDate = [outputFormatter stringFromDate:date];
     return formattedDate;
 }
+
+- (NSNumber *)roundToSingleDecimal:(NSNumber *)number {
+    
+    double roundedValue = round([number doubleValue] * 10) / 10.0;
+    return [NSNumber numberWithDouble:roundedValue];
+    
+}
+
 @end

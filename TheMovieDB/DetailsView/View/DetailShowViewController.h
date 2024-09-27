@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (atomic, strong, nullable) TvShowsPopularModel *selectedShow;
 @property (strong, nonatomic) IBOutlet UICollectionView *castCollectionView;
 @property (atomic, assign) OptionToSearch optionSelected;
+@property (strong, nonatomic) IBOutlet UIView *circlePopularityView;
+@property (strong, nonatomic) IBOutlet UILabel *titleLabel;
 
 
 @end

@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)applyFilter:(TopFilter)filterOption;
 -(void) loadImageForShow:(TvShowsPopularModel *)tvShow completion:(void (^)(UIImage *image, NSError *error)) completion ;
 -(NSString *)formatDate:(NSString *)dateToGiveFormat;
+- (NSNumber *)roundToSingleDecimal:(NSNumber *)number;
 @end
 
 NS_ASSUME_NONNULL_END

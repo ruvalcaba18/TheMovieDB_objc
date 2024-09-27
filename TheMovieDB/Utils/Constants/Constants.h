@@ -26,3 +26,4 @@ extern NSString* const tvShowCellIdentifier;
 extern NSString* const LoginTitle;
 extern NSString* const TvShowsTitle;
 extern NSString* const MovieTitle;
+extern NSString* const creditsEndPoint;

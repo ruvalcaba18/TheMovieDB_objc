@@ -14,6 +14,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MovieDetails : NSObject
+
 @property (nonatomic, assign) BOOL adult;
 @property (nonatomic, strong) NSString *backdropPath;
 @property (nonatomic, strong) NSString *belongsToCollection;
@@ -22,7 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *homepage;
 @property (nonatomic, assign) NSInteger movieId;
 @property (nonatomic, strong) NSString *imdbId;
-@property (nonatomic, strong) NSArray<NSString *> *originCountry;
 @property (nonatomic, strong) NSString *originalLanguage;
 @property (nonatomic, strong) NSString *originalTitle;
 @property (nonatomic, strong) NSString *overview;
@@ -40,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL video;
 @property (nonatomic, assign) CGFloat voteAverage;
 @property (nonatomic, assign) NSInteger voteCount;
+
 @end
 
 NS_ASSUME_NONNULL_END

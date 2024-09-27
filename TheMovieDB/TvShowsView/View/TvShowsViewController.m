@@ -106,6 +106,7 @@
     NSDictionary *userInfo = notification.userInfo;
     self.selectedOption = [userInfo[@"Option"] integerValue];
     self.tvSegmentControl.hidden = NO;
+    self.tvSegmentControl.userInteractionEnabled = NO;
     [self loadDataForSelectedOption:self.selectedOption isOptionSelected:YES];
     self.isOptionSelected = YES;
     [self.selectOptionView removeFromSuperview];
@@ -126,6 +127,7 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.title = self.selectedOption == 0 ? TvShowsTitle : MovieTitle;
         self.tvSegmentControl.layer.mask = nil;
+        self.tvSegmentControl.userInteractionEnabled = YES;
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tvShowsCollectionView reloadData];
         });
@@ -264,7 +266,7 @@
         cell.moviePoster.image = image;
         cell.movieTitle.text = tvShow.name ?: tvShow.title;
         cell.movieDescriptionLabel.text = tvShow.overview.length > 0 ? tvShow.overview : @"No description";
-        cell.moviePopularityLabel.text = [NSString stringWithFormat:@"★ %@", tvShow.vote_average];
+        cell.moviePopularityLabel.text = [NSString stringWithFormat:@"★ %@", [self.viewModel roundToSingleDecimal:tvShow.vote_average] ];
         cell.movieReleaseDateLabel.text = [self.viewModel formatDate:tvShow.first_air_date ?: tvShow.release_date];
         
         [cell removeShimmerEffect];

@@ -45,19 +45,69 @@
     [self waitForExpectationsWithTimeout:5 handler:nil];
 }
 
-- (void)testApplyFilter {
+- (void)testApplyAllFilters {
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Apply Filter"];
+    NSArray *filterOptions = @[@(SearchPopularTvShows),
+                               @(SearchTopRatedTvShows),
+                               @(SearchOnTvShows),
+                               @(SearchAiringTodayShows),
+                               @(SearchNowPlayingMovies),
+                               @(SearchPopularMovies),
+                               @(SearchTopRatedMovies),
+                               @(SearchUpcomingMovies)];
+
+    for (NSNumber *filterOption in filterOptions) {
+        [self runTestForFilter: [filterOption intValue] ];
+    }
     
-    [self.viewModel applyFilter:SearchPopularTvShows];
+}
+
+- (void)runTestForFilter:(TopFilter)filterOption {
+    
+    NSString *filterDescription;
+    
+    switch (filterOption) {
+            
+        case SearchPopularTvShows:
+            filterDescription = @"Popular TV Shows";
+            break;
+        case SearchTopRatedTvShows:
+            filterDescription = @"Top Rated TV Shows";
+            break;
+        case SearchOnTvShows:
+            filterDescription = @"Currently On TV Shows";
+            break;
+        case SearchAiringTodayShows:
+            filterDescription = @"Airing Today TV Shows";
+            break;
+        case SearchNowPlayingMovies:
+            filterDescription = @"Now Playing Movies";
+            break;
+        case SearchPopularMovies:
+            filterDescription = @"Popular Movies";
+            break;
+        case SearchTopRatedMovies:
+            filterDescription = @"Top Rated Movies";
+            break;
+        case SearchUpcomingMovies:
+            filterDescription = @"Upcoming Movies";
+            break;
+    }
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:[NSString stringWithFormat:@"Apply Filter: %@", filterDescription]];
+    
+    [self.viewModel applyFilter:filterOption];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        XCTAssertNotNil(self.viewModel.popularTvShows, @"Filtered TV shows should be fetched.");
-        XCTAssertGreaterThan(self.viewModel.popularTvShows.count, 0, @"There should be at least one filtered TV show.");
+        
+        XCTAssertNotNil(self.viewModel.popularTvShows, @"Filtered %@ should be fetched.", filterDescription);
+        XCTAssertGreaterThan(self.viewModel.popularTvShows.count, 0, @"There should be at least one result for %@.", filterDescription);
         [expectation fulfill];
+        
     });
     
-    [self waitForExpectationsWithTimeout:5 handler:nil];
+    [self waitForExpectationsWithTimeout:15 handler:nil];
+    
 }
 
 
