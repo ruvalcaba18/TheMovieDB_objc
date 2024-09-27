@@ -34,10 +34,10 @@
                                             <rect key="frame" x="20" y="19" width="353" height="77"/>
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <segments>
-                                                <segment title="Popular"/>
-                                                <segment title="Top Rated"/>
-                                                <segment title="On Tv"/>
-                                                <segment title="Airing Today"/>
+                                                <segment title=""/>
+                                                <segment title=""/>
+                                                <segment title=""/>
+                                                <segment title=""/>
                                             </segments>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <color key="selectedSegmentTintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

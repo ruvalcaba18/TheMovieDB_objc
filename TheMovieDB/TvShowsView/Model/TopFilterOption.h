@@ -6,7 +6,7 @@
 //
 
 typedef NS_ENUM(NSInteger,TopFilter) {
-    SerchPopularTvShows = 0 ,
+    SearchPopularTvShows = 0 ,
     SearchTopRatedTvShows = 1,
     SearchOnTvShows = 2,
     SearchAiringTodayShows = 3,

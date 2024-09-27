@@ -13,7 +13,7 @@
 #import "UIKit/UIKit.h"
 #import "ImagesEndpoint.h"
 #import "PostersObject.h"
-#import "TopFilerOption.h"
+#import "TopFilterOption.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

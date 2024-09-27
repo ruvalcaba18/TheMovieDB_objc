@@ -60,12 +60,11 @@
 
 - (void)applyFilter:(TopFilter)filterOption {
     
-    [self.popularTvShows removeAllObjects];
     NSString *url;
     
     switch (filterOption ) {
             
-        case SerchPopularTvShows: {
+        case SearchPopularTvShows: {
          url = [NSString stringWithFormat:@"%@%@%@?%@&api_key=%@",baseURL,discoverEndpoint,tvShowsEndPoint,tvShowsEndPointPopular,apiKey];
             break;
         }
@@ -103,6 +102,7 @@
         if (error) {
             
         } else {
+            [self.popularTvShows removeAllObjects];
             self.popularTvShows = [self parseTvShowData:data];
         }
     }];

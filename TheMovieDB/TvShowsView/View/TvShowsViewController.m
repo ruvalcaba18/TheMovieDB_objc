@@ -115,6 +115,7 @@
     
     if (isSelected) {
         [self.viewModel fetchShowsWithSearchOption: self.selectedOption];
+        [self updateSegmentControlForOption:option];
         [self updateTitle];
     }
 }
@@ -129,6 +130,22 @@
         });
 
     });
+}
+
+- (void)updateSegmentControlForOption:(OptionToSearch)option {
+    
+    if (option == searchTvShows) {
+        [self.tvSegmentControl setTitle:@"Popular Shows" forSegmentAtIndex:0];
+        [self.tvSegmentControl setTitle:@"Top Rated Shows" forSegmentAtIndex:1];
+        [self.tvSegmentControl setTitle:@"On Tv" forSegmentAtIndex:2];
+        [self.tvSegmentControl setTitle:@"Airing Today" forSegmentAtIndex:3];
+        
+    } else if (option == searchMovies) {
+        [self.tvSegmentControl setTitle:@"Popular Movies" forSegmentAtIndex:0];
+        [self.tvSegmentControl setTitle:@"Top Rated Movies" forSegmentAtIndex:1];
+        [self.tvSegmentControl setTitle:@"Now Playing Movies" forSegmentAtIndex:2];
+        [self.tvSegmentControl setTitle:@"Upcoming Movies" forSegmentAtIndex:3];
+    }
 }
 
 - (void)showError {
@@ -172,27 +189,39 @@
 
 - (void)optionChanged:(UISegmentedControl *)sender {
     NSInteger selectedIndex = sender.selectedSegmentIndex;
-    TopFilter option;
-    
-    switch (selectedIndex) {
-        case 0:
-            option = SearchPopularMovies;
-            break;
-        case 1:
-            option = SearchTopRatedMovies;
-            break;
-        case 2:
-            option = SearchOnTvShows;
-            break;
-        case 3:
-            option = SearchAiringTodayShows;
-            break;
-        default:
-            return;
+    TopFilter selectedFilter;
+
+    NSArray<NSNumber *> *filters;
+
+    if (self.selectedOption == searchTvShows) {
+        
+        filters = @[
+            @(SearchPopularTvShows),
+            @(SearchTopRatedTvShows),
+            @(SearchOnTvShows),
+            @(SearchAiringTodayShows)
+        ];
+    } else if (self.selectedOption == searchMovies) {
+        
+        filters = @[
+            @(SearchPopularMovies),
+            @(SearchTopRatedMovies),
+            @(SearchNowPlayingMovies),
+            @(SearchUpcomingMovies)
+        ];
     }
-    
-    [self.viewModel applyFilter:option];
+
+    if (selectedIndex >= 0 && selectedIndex < filters.count) {
+      
+        selectedFilter = (TopFilter)[filters[selectedIndex] integerValue];
+   
+        [self.viewModel applyFilter:selectedFilter];
+        
+        [self.tvShowsCollectionView reloadData];
+    }
 }
+
+
 
 #pragma mark - Collection View Delegate and DataSource
 

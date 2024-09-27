@@ -12,7 +12,7 @@
 #import "TvShowsViewModel.h"
 #import "SelectOptionView.h"
 #import "DetailShowViewController.h"
-#import "TopFilerOption.h"
+#import "TopFilterOption.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
