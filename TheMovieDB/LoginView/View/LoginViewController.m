@@ -9,14 +9,14 @@
 
 @interface LoginViewController ()
 @property (atomic, strong) LoginViewModel *viewModel;
-@property (atomic, strong) NSString *userTapped;
-@property (atomic, strong ) NSString *passwordTapped;
+@property (atomic, strong) NSString *enteredUsername;
+@property (atomic, strong ) NSString *enteredPassword;
 
 -(void)setUpNavigation;
 @end
 
 @implementation LoginViewController
-@synthesize viewModel,usernameTextField,passwordTextField,userTapped,passwordTapped,wallpaperView,wallpaperImage;
+@synthesize viewModel,usernameTextField,passwordTextField,enteredUsername,enteredPassword,wallpaperView,wallpaperImage;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -63,29 +63,38 @@
 
 - (IBAction)verifyCredentials:(UIButton *)sender {
     
-    if ( [self.viewModel isUserCanLogin: self.userTapped withPassword: self.passwordTapped]) {
+    if ( [self.viewModel isUserCanLogin: self.enteredUsername withPassword: self.enteredPassword]) {
         TvShowsViewController *tvShowsController = [[TvShowsViewController alloc] init];
         [self.navigationController pushViewController:tvShowsController animated:YES];
     } else {
-        // TODO : hacer pantalla de error 
+        // TODO : handle error
     }
     
 }
 
 #pragma mark : - UITextfield Delegate Functions
+
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
+    
     if (textField == usernameTextField) {
-        self.userTapped = textField.text;
+        
+        self.enteredUsername = textField.text;
+        
     } else if (textField == passwordTextField) {
-        self.passwordTapped = textField.text;
+        
+        self.enteredPassword = textField.text;
     }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    
     if (textField == usernameTextField) {
-        self.userTapped = textField.text;
+        
+        self.enteredUsername = textField.text;
+        
     } else if (textField == passwordTextField) {
-        self.passwordTapped = textField.text;
+        
+        self.enteredPassword = textField.text;
     }
     return YES;
 }
@@ -93,24 +102,25 @@
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     
     if (textField == usernameTextField) {
-        NSString *currentText = textField.text;
-        NSString *updateText = [currentText stringByReplacingCharactersInRange:range withString:string];
         
-        if(updateText.length > 3  ) {
-            self.userTapped = updateText;
-        }
-        
+        self.enteredUsername = [self updatedTextFromTextfields:textField.text inRange:range withReplacementString:string];
     }
     
     if (textField == passwordTextField) {
-        NSString *currentText = textField.text;
-        NSString *updateText = [currentText stringByReplacingCharactersInRange:range withString:string];
-        
-        if(updateText.length > 3  ) {
-            self.passwordTapped = updateText;
-        }
-        
+        self.enteredPassword = [self updatedTextFromTextfields:textField.text inRange:range withReplacementString:string];
     }
     return YES;
 }
+
+-(NSString *) updatedTextFromTextfields:(NSString *) currentText inRange:(NSRange)range withReplacementString:(NSString *)replacementString {
+
+    NSString *updateText = [currentText stringByReplacingCharactersInRange:range withString:replacementString];
+    
+    if(updateText.length > 3  ) {
+       return  updateText;
+    } else {
+        return @"";
+    }
+}
+
 @end
