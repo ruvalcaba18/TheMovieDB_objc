@@ -7,13 +7,15 @@
 
 #import <Foundation/Foundation.h>
 #import "User.h"
+#import "RetrieveFilePathManager.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface LoginViewModel : NSObject
+
 @property (atomic, strong) NSMutableArray<User *> * testusers;
 -(instancetype)initViewModel;
 -(BOOL)isUserCanLogin:(NSString *_Nonnull)username withPassword:(NSString *_Nonnull)password;
-- (void)retrieveUsersFromJsonFile;
 @end
 
 NS_ASSUME_NONNULL_END

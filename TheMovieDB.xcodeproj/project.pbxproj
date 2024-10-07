@@ -58,6 +58,7 @@
 				"DetailsView/View-Model/DetailViewModel.m",
 				DetailsView/View/DetailShowViewController.m,
 				DetailsView/View/DetailShowViewController.xib,
+				LoginView/Managers/RetrieveFilePathManager.m,
 				LoginView/Model/User.m,
 				LoginView/SubViews/MovieDBInitialView/MovieDBSquareAndTile.m,
 				LoginView/SubViews/MovieDBInitialView/MovieDBSquareAndTile.xib,
