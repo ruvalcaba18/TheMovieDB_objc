@@ -84,11 +84,11 @@
         self.titleLabel.text = self.viewModel.serieDetails.name;
         self.descriptionLabel.text = self.viewModel.serieDetails.overview;
         self.creatorLabel.text = [self.viewModel formattedCreators:self.viewModel.serieDetails.createdBy];
-        self.popularityLabel.text = [NSString stringWithFormat:@"%@", [self.viewModel roundToSingleDecimal:self.viewModel.serieDetails.voteAverage]];
+        self.popularityLabel.text = [NSString stringWithFormat:@"%@", [NSNumber roundToSingleDecimal:self.viewModel.serieDetails.voteAverage]];
     } else {
         self.titleLabel.text = self.viewModel.movieDetails.title;
         self.descriptionLabel.text = self.viewModel.movieDetails.overview;
-        self.popularityLabel.text = [[self.viewModel roundToSingleDecimal:self.viewModel.movieDetails.voteAverage] stringValue];
+        self.popularityLabel.text = [ [NSNumber roundToSingleDecimal:self.viewModel.movieDetails.voteAverage] stringValue];
     }
 }
 
@@ -130,11 +130,11 @@
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
-    return 10;
+    return minimumLineSpacingForIndex;
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
-    return 23;
+    return minimumSpacingForSection;
 }
 
 

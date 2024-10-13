@@ -21,8 +21,10 @@
 #import "ShowDetail.h"
 #import "Actor.h"
 #import "UIKit/UIKit.h"
-#import "PostersObject.h"
 #import "TvShowsPopularModel.h"
+#import "NetworkManager.h"
+#import "NSNumber+RoundFigures.h"
+#import "NSData+ParseDataToObject.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,8 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initDetailViewModel;
 - (void)fetchDetailsWithOption:(OptionToSearch)option andIdentifier:(NSString *)identifier ;
-- (NSNumber *)roundToSingleDecimal:(NSNumber *_Nullable )number;
--(NSString *)formatDate:(NSString *)dateToGiveFormatt;
 - (void)fetchCastForTvShowWithId:(NSInteger)showId completion:(void (^)(NSArray *cast,NSError *error))completion ;
 - (NSString *)formattedCreators:(NSArray<Creator *> *)creators;
 - (void)loadImageForShow:(TvShowsPopularModel *)show completion:(void (^)(UIImage *image, NSError *error))completion;

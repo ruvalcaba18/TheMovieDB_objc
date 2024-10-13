@@ -9,7 +9,7 @@
 
 @interface TvShowsViewController ()
 
-@property (nonatomic, strong) TvShowsViewModel *viewModel;
+@property (nonatomic, strong) TvShowsViewModel *tvShowsviewModel;
 @property (nonatomic, strong) SelectOptionView *selectOptionView;
 @property (nonatomic, assign) OptionToSearch selectedOption;
 @property (nonatomic, assign) BOOL isOptionSelected;
@@ -25,7 +25,7 @@
 @end
 @implementation TvShowsViewController
 
-@synthesize tvSegmentControl, tvShowsCollectionView, viewModel, optionContainer, selectOptionView, selectedOption;
+@synthesize tvSegmentControl, tvShowsCollectionView, tvShowsviewModel, optionContainer, selectOptionView, selectedOption;
 
 #pragma mark - View Lifecycle
 
@@ -46,7 +46,8 @@
 - (void)initializeViewController {
     
     self.selectOptionView = [[SelectOptionView alloc] init];
-    self.viewModel = [[TvShowsViewModel alloc] initViewModel];
+    self.tvShowsviewModel = [[TvShowsViewModel alloc] initViewModel];
+    
     [self.optionContainer addSubview:self.selectOptionView];
     [self.view bringSubviewToFront:self.optionContainer];
     [self configureOptionView];
@@ -116,7 +117,7 @@
 - (void)loadDataForSelectedOption:(OptionToSearch)option isOptionSelected:(BOOL)isSelected{
     
     if (isSelected) {
-        [self.viewModel fetchShowsWithSearchOption: self.selectedOption];
+        [self.tvShowsviewModel fetchShowsWithSearchOption: self.selectedOption];
         [self updateSegmentControlForOption:option];
         [self updateTitle];
     }
@@ -218,7 +219,7 @@
       
         selectedFilter = (TopFilter)[filters[selectedIndex] integerValue];
    
-        [self.viewModel applyFilter:selectedFilter];
+        [self.tvShowsviewModel applyFilter:selectedFilter];
         
         [self.tvShowsCollectionView reloadData];
     }
@@ -230,7 +231,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     
-    return self.isOptionSelected ? MAX(self.viewModel.popularTvShows.count, 10) : 10;
+    return self.isOptionSelected ? MAX(self.tvShowsviewModel.popularTvShows.count, 10) : 10;
     
 }
 
@@ -241,10 +242,10 @@
     cell.layer.cornerRadius = 15;
     cell.userInteractionEnabled = NO;
     
-    TvShowsPopularModel *tvShow = self.isOptionSelected ? self.viewModel.popularTvShows[indexPath.row] : nil;
+    TvShowsPopularModel *tvShow = self.isOptionSelected ? self.tvShowsviewModel.popularTvShows[indexPath.row] : nil;
     [cell addShimmerEffect];
     
-    [self.viewModel loadImageForShow:tvShow completion:^(UIImage *image, NSError *error) {
+    [self.tvShowsviewModel loadImageForShow:tvShow completion:^(UIImage *image, NSError *error) {
         
         if (error) {
             // TODO: Show error view
@@ -266,8 +267,8 @@
         cell.moviePoster.image = image;
         cell.movieTitle.text = tvShow.name ?: tvShow.title;
         cell.movieDescriptionLabel.text = tvShow.overview.length > 0 ? tvShow.overview : @"No description";
-        cell.moviePopularityLabel.text = [NSString stringWithFormat:@"★ %@", [self.viewModel roundToSingleDecimal:tvShow.vote_average] ];
-        cell.movieReleaseDateLabel.text = [self.viewModel formatDate:tvShow.first_air_date ?: tvShow.release_date];
+        cell.moviePopularityLabel.text = [NSString stringWithFormat:@"★ %@", [NSNumber  roundToSingleDecimal:tvShow.vote_average] ];
+        cell.movieReleaseDateLabel.text = [NSString formatDateToLatinoAmericanFormat: tvShow.first_air_date ?: tvShow.release_date];
         
         [cell removeShimmerEffect];
         cell.userInteractionEnabled = YES;
@@ -277,7 +278,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    TvShowsPopularModel *selectedTvShow = self.viewModel.popularTvShows[indexPath.row];
+    TvShowsPopularModel *selectedTvShow = self.tvShowsviewModel.popularTvShows[indexPath.row];
     DetailShowViewController *detailView = [[DetailShowViewController alloc] init];
     detailView.selectedShow = selectedTvShow;
     detailView.selectedOption  = self.selectedOption;

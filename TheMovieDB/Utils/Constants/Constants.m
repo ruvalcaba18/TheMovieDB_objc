@@ -29,3 +29,5 @@ NSString* const LoginTitle = @"Login";
 NSString* const TvShowsTitle = @"Tv shows";
 NSString* const MovieTitle = @"Movie Shows";
 NSString* const creditsEndPoint = @"credits";
+CGFloat   const minimumLineSpacingForIndex = 10;
+CGFloat   const minimumSpacingForSection = 23;

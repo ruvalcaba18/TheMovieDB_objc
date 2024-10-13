@@ -28,3 +28,5 @@ extern NSString* const TvShowsTitle;
 extern NSString* const MovieTitle;
 extern NSString* const creditsEndPoint;
 extern NSString* const RoundedCellIdentifier;
+extern CGFloat  const minimumLineSpacingForIndex;
+extern CGFloat  const minimumSpacingForSection;

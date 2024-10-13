@@ -12,8 +12,6 @@
 @property (nonatomic,assign) OptionToSearch optionSelected;
 @property (nonatomic,strong) NSCache *imageCache;
 
--(void)performRequestWithURL:(NSString *)urlString completion:(void (^)(NSData *data,NSError *error))completion;
-
 @end
 
 @implementation DetailViewModel
@@ -44,7 +42,7 @@
             break;
             
     }
-    [ self performRequestWithURL:url completion:^(NSData *data, NSError *error) {
+    [ NetworkManager performRequestWithURL:url completion:^(NSData *data, NSError *error) {
         
         if (error) {
             NSLog(@"Error %@",error);
@@ -75,7 +73,7 @@
     }
     
     
-    [self performRequestWithURL:urlString completion:^(NSData *data, NSError *error) {
+    [NetworkManager performRequestWithURL:urlString completion:^(NSData *data, NSError *error) {
         
         if (error) {
             
@@ -96,43 +94,9 @@
             return;
         }
         
-        completion([self decodeCastFromJSON: jsonResponse[@"cast"] ],nil);
+        completion( [self decodeCastFromJSON: jsonResponse[@"cast"] ],nil);
     }];
 }
-
--(void)performRequestWithURL:(NSString *)urlString completion:(void (^)(NSData *data,NSError *error))completion {
-    
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL: url cachePolicy: NSURLRequestUseProtocolCachePolicy timeoutInterval: 10.0];
-    
-    NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data,
-                                                                                                                   NSURLResponse * _Nullable response,
-                                                                                                                   NSError * _Nullable error) {
-        if (error) {
-            
-            completion(nil,error);
-            
-        } else {
-            
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            NSError *statusError = [NSError errorWithDomain:@"HTTPError" code:httpResponse.statusCode userInfo:nil];
-            
-            switch (httpResponse.statusCode) {
-                    
-                case 200:
-                    completion(data,nil);
-                    break;
-                    
-                default:
-                    break;
-            }
-            
-        }
-    }];
-    
-    [dataTask resume];
-}
-
 
 
 #pragma mark: - Decoders
@@ -410,59 +374,8 @@
 }
 
 
--(PostersObject *)parsePosterData:(NSData *)posterData {
-    
-    NSError *jsonError;
-    NSDictionary *dataDicc = [NSJSONSerialization JSONObjectWithData:posterData options:0 error:&jsonError];
-    
-    if (jsonError) {
-        
-        NSLog(@"Error to decode the json : %@",jsonError.localizedDescription);
-        
-        return nil;
-    }
-    
-    NSArray *postersArray = dataDicc[@"posters"];
-    
-    if(postersArray.count > 0 ) {
-        
-        NSDictionary *firstPoster = postersArray.firstObject;
-        PostersObject *posterInfo = [[PostersObject alloc] init];
-        posterInfo.file_path = firstPoster[@"file_path"];
-        return posterInfo;
-        
-    }
-    return nil;
-}
-
 #pragma mark: - functions that transform variables
 
--(NSString *)formatDate:(NSString *)dateToGiveFormatt {
-    
-    NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
-    
-    [inputFormatter setDateFormat:@"yyy-MM-dd"];
-    
-    NSDate *date = [inputFormatter dateFromString:dateToGiveFormatt];
-    
-    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-    [outputFormatter setDateFormat:@"MMM dd, yyyy"];
-    
-    NSString *formattedDate = [outputFormatter stringFromDate:date];
-    return formattedDate;
-}
-
-- (NSNumber *)roundToSingleDecimal:(NSNumber *)number {
-    
-    if (![number isKindOfClass:[NSNumber class]]) {
-        NSLog(@"El valor proporcionado no es un NSNumber: %@", number);
-        return @(0);
-    }
-    
-    float roundedValue = roundf(number.floatValue * 10) / 10;
-    return @(roundedValue);
-    
-}
 
 - (NSString *)formattedCreators:(NSArray<Creator *> *)creators {
     
@@ -514,19 +427,19 @@
     }
     
     
-    [self performRequestWithURL:imageMetaDataUrl completion:^(NSData *data, NSError *error) {
+    [NetworkManager performRequestWithURL:imageMetaDataUrl completion:^(NSData *data, NSError *error) {
         if (error) {
             NSLog(@"Error to consult endpoint metadata: %@", error.localizedDescription);
             completion(nil, error);
             return;
         }
         
-        PostersObject *posterInfo = [self parsePosterData:data];
+        PostersObject *posterInfo = [NSData parsePosterData: data];
         
         if (posterInfo.file_path) {
             NSString *imageFullURL = [NSString stringWithFormat:@"%@%@", baseImagesURL, posterInfo.file_path];
             
-            [self performRequestWithURL:imageFullURL completion:^(NSData *data, NSError *error) {
+            [NetworkManager performRequestWithURL:imageFullURL completion:^(NSData *data, NSError *error) {
                 if (error) {
                     NSLog(@"Error to download image: %@", error.localizedDescription);
                     completion(nil, error);
@@ -571,7 +484,7 @@
     
     NSString *imageMetaDataUrl = [NSString stringWithFormat:@"%@%@", baseImagesURL, profilePath];
     
-    [self performRequestWithURL:imageMetaDataUrl completion:^(NSData *data, NSError *error) {
+    [NetworkManager performRequestWithURL:imageMetaDataUrl completion:^(NSData *data, NSError *error) {
         if (error) {
             NSLog(@"Error descargando la imagen: %@", error.localizedDescription);
             completion(nil, error);

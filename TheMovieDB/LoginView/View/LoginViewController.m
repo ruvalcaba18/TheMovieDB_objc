@@ -8,6 +8,7 @@
 #import "LoginViewController.h"
 
 @interface LoginViewController ()
+
 @property (atomic, strong) LoginViewModel *viewModel;
 @property (atomic, strong) NSString *enteredUsername;
 @property (atomic, strong ) NSString *enteredPassword;
@@ -19,13 +20,16 @@
 @synthesize viewModel,usernameTextField,passwordTextField,enteredUsername,enteredPassword,wallpaperView,wallpaperImage;
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
+    
     self.viewModel = [[LoginViewModel alloc] initViewModel];
     self.usernameTextField.delegate = self;
     self.passwordTextField.delegate = self;
     self.passwordTextField.secureTextEntry = YES;
     self.wallpaperImage.alpha = 0.5;
     [self.wallpaperView sendSubviewToBack:self.wallpaperImage];
+    
     [self setUpNavigation];
 }
 

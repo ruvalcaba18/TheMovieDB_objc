@@ -7,13 +7,15 @@
 
 #import <Foundation/Foundation.h>
 #import "Constants.h"
-#import "TvShowsModel.h"
 #import "TvShowsPopularModel.h"
 #import "OptionToSearch.h"
 #import "UIKit/UIKit.h"
 #import "ImagesEndpoint.h"
 #import "PostersObject.h"
 #import "TopFilterOption.h"
+#import "NetworkManager.h"
+#import "NSNumber+RoundFigures.h"
+#import "NSData+ParseDataToObject.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,8 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)fetchShowsWithSearchOption:(OptionToSearch)option;
 -(void)applyFilter:(TopFilter)filterOption;
 -(void) loadImageForShow:(TvShowsPopularModel *)tvShow completion:(void (^)(UIImage *image, NSError *error)) completion ;
--(NSString *)formatDate:(NSString *)dateToGiveFormat;
-- (NSNumber *)roundToSingleDecimal:(NSNumber *)number;
+
 @end
 
 NS_ASSUME_NONNULL_END

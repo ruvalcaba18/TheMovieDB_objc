@@ -1,9 +1,6 @@
-//
 //  TvShowsViewModel.m
 //  TheMovieDB
-//
 //  Created by The Coding Kid on 25/09/2024.
-//
 
 #import "TvShowsViewModel.h"
 
@@ -11,10 +8,6 @@
 @interface TvShowsViewModel()
 
 @property (nonatomic,strong) NSCache *imageCache;
-
--(void)performRequestWithURL:(NSString *)urlString completion:(void (^)(NSData *data,NSError *error))completion;
-- (NSMutableArray *)parseTvShowData:(NSData *)data;
-- (PostersObject *)parsePosterData:(NSData *)data;
 @end
 
 #pragma mark: - Implementation of the class
@@ -22,11 +15,14 @@
 @synthesize popularTvShows,imageCache;
 
 -(instancetype)initViewModel {
+    
     self = [super init];
     
     if(self) {
+        
         self.popularTvShows = [NSMutableArray array];
         self.imageCache = [[NSCache alloc] init];
+        
     }
     return self;
 }
@@ -48,11 +44,11 @@
             return;
     }
     
-    [self performRequestWithURL:url completion:^(NSData *data, NSError *error) {
+    [NetworkManager performRequestWithURL:url completion:^(NSData *data, NSError *error) {
         if (error) {
             NSLog(@"Error %@",error.localizedDescription);
         } else {
-            self.popularTvShows = [self parseTvShowData:data];
+            self.popularTvShows = [NSData parseTvShowData:data];
         }
     }];
 }
@@ -98,14 +94,15 @@
         }
     }
    
-    [self performRequestWithURL:url completion:^(NSData *data, NSError *error) {
+    [NetworkManager performRequestWithURL:url completion:^(NSData *data, NSError *error) {
         if (error) {
             
         } else {
             [self.popularTvShows removeAllObjects];
-            self.popularTvShows = [self parseTvShowData:data];
+            self.popularTvShows = [NSData parseTvShowData:data];
         }
     }];
+    
 }
 
 -(void) loadImageForShow:(TvShowsPopularModel *)tvShow completion:(void (^)(UIImage *image, NSError *error)) completion {
@@ -127,7 +124,7 @@
     }
     
     
-    [self performRequestWithURL: imageMetaDataUrl completion:^(NSData *data, NSError *error) {
+    [NetworkManager performRequestWithURL: imageMetaDataUrl completion:^(NSData *data, NSError *error) {
         
         if(error) {
             NSLog(@"Error to consult endpoint metadata : %@",error.localizedDescription);
@@ -135,13 +132,13 @@
             return ;
         }
         
-        PostersObject *posterInfo = [self parsePosterData:data];
+        PostersObject *posterInfo = [NSData parsePosterData:data];
         
         if (posterInfo.file_path) {
             
             NSString *imageFullURL = [NSString stringWithFormat:@"%@%@",baseImagesURL,posterInfo.file_path];
             
-            [self performRequestWithURL: imageFullURL completion:^(NSData *data, NSError *error) {
+            [NetworkManager performRequestWithURL: imageFullURL completion:^(NSData *data, NSError *error) {
 
                 
                 if(error) {
@@ -169,103 +166,5 @@
     }];
 }
 
--(void)performRequestWithURL:(NSString *)urlString completion:(void (^)(NSData *data,NSError *error))completion {
-    
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL: url cachePolicy: NSURLRequestUseProtocolCachePolicy timeoutInterval: 10.0];
-   
-    NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data,
-                                                                                                                   NSURLResponse * _Nullable response,
-                                                                                                                   NSError * _Nullable error) {
-        if (error) {
-            completion(nil,error);
-        } else {
-            
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            
-            switch (httpResponse.statusCode) {
-                case 200:
-                    completion(data,nil);
-                    break;
-                    
-                default:
-                    break;
-            }
-           
-        }
-    }];
-    [dataTask resume];
-}
-
-
-#pragma mark: - Decoders
--(NSMutableArray *)parseTvShowData:(NSData *)data {
-    
-    NSError *jsonError;
-    NSDictionary *jsonInformation = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-    
-    if (jsonError) {
-        
-        NSLog(@"JSON Error: %@",jsonError.localizedDescription);
-        
-        return nil;
-    }
-    
-    TvShowsModel *tvShowModel = [[TvShowsModel alloc] initModelWithPageNumber: jsonInformation[@"page"]
-                                                                   totalPages: jsonInformation[@"total_pages"]
-                                                                 totalResults: jsonInformation[@"total_Results"]
-                                                                    andResult: jsonInformation[@"results"]];
-    return [tvShowModel getResults];
-}
-
-
--(PostersObject *)parsePosterData:(NSData *)posterData {
-    
-    NSError *jsonError;
-    NSDictionary *dataDicc = [NSJSONSerialization JSONObjectWithData:posterData options:0 error:&jsonError];
-    
-    if (jsonError) {
-        
-        NSLog(@"Error to decode the json : %@",jsonError.localizedDescription);
-        
-        return nil;
-    }
-    
-    NSArray *postersArray = dataDicc[@"posters"];
-    
-    if(postersArray.count > 0 ) {
-        
-        NSDictionary *firstPoster = postersArray.firstObject;
-        PostersObject *posterInfo = [[PostersObject alloc] init];
-        posterInfo.file_path = firstPoster[@"file_path"];
-        return posterInfo;
-        
-    }
-    return nil;
-}
-
-#pragma mark: - functions that transform variables
-
--(NSString *)formatDate:(NSString *)dateToGiveFormatt {
-    
-    NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
-    
-    [inputFormatter setDateFormat:@"yyy-MM-dd"];
-    
-    NSDate *date = [inputFormatter dateFromString:dateToGiveFormatt];
-    
-    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-    [outputFormatter setDateFormat:@"MMM dd, yyyy"];
-    
-    NSString *formattedDate = [outputFormatter stringFromDate:date];
-    return formattedDate;
-}
-
-- (NSNumber *)roundToSingleDecimal:(NSNumber *)number {
-    
-    double roundedValue = round([number doubleValue] * 10) / 10.0;
-    return [NSNumber numberWithDouble:roundedValue];
-    
-}
 
 @end
