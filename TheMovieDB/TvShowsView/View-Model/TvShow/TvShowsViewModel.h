@@ -6,13 +6,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Constants.h"
+
 #import "TvShowsPopularModel.h"
-#import "OptionToSearch.h"
 #import "UIKit/UIKit.h"
 #import "ImagesEndpoint.h"
 #import "PostersObject.h"
-#import "TopFilterOption.h"
+#import "URLGenerator.h"
 #import "NetworkManager.h"
 #import "NSNumber+RoundFigures.h"
 #import "NSData+ParseDataToObject.h"
@@ -26,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initViewModel;
 -(void)fetchShowsWithSearchOption:(OptionToSearch)option;
 -(void)applyFilter:(TopFilter)filterOption;
--(void) loadImageForShow:(TvShowsPopularModel *)tvShow completion:(void (^)(UIImage *image, NSError *error)) completion ;
+-(void) loadImage:(TvShowsPopularModel *)tvShow completion:(void (^)(UIImage *image, NSError *error)) completion ;
 
 @end
 

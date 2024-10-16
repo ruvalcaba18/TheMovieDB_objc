@@ -9,22 +9,14 @@
 #import "OptiontoSearch.h"
 #import "Constants.h"
 #import "TvSerie.h"
-#import "Genre.h"
 #import "MovieDetails.h"
-#import "Creator.h"
-#import "NetworkModel.h"
-#import "Season.h"
-#import "Episode.h"
-#import "ProductionCompany.h"
-#import "ProductionCountry.h"
-#import "SpokenLanguage.h"
 #import "ShowDetail.h"
-#import "Actor.h"
-#import "UIKit/UIKit.h"
-#import "TvShowsPopularModel.h"
 #import "NetworkManager.h"
 #import "NSNumber+RoundFigures.h"
 #import "NSData+ParseDataToObject.h"
+#import "NSDictionary+JSONDictionaryDecoder.h"
+#import  "URLGenerator.h"
+#import "NSArray+JSONArrayDecoder.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -37,8 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fetchDetailsWithOption:(OptionToSearch)option andIdentifier:(NSString *)identifier ;
 - (void)fetchCastForTvShowWithId:(NSInteger)showId completion:(void (^)(NSArray *cast,NSError *error))completion ;
 - (NSString *)formattedCreators:(NSArray<Creator *> *)creators;
-- (void)loadImageForShow:(TvShowsPopularModel *)show completion:(void (^)(UIImage *image, NSError *error))completion;
-- (void)loadImageForActor:(id )actor completion:(void (^)(UIImage *image, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

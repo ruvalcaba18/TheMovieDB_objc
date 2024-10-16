@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *originalName;
 @property (nonatomic, assign) NSInteger gender;
 @property (nonatomic, strong) NSString *profilePath;
+
 @end
 
 NS_ASSUME_NONNULL_END

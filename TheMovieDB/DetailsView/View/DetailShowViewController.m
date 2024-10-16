@@ -33,7 +33,7 @@
     [self.viewModel fetchDetailsWithOption:self.selectedOption
                              andIdentifier:[self.selectedShow.identifier stringValue]];
     
-    [self.viewModel loadImageForShow:self.selectedShow completion:^(UIImage * _Nonnull image, NSError * _Nonnull error) {
+    [NetworkManager.sharedManager loadImageForShow:self.selectedShow completion:^(UIImage * _Nonnull image, NSError * _Nonnull error) {
         
         if (image) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -110,7 +110,7 @@
     
     cell.nameMemberLabel.text = actor.name ;
 
-    [self.viewModel loadImageForActor:actor completion:^(UIImage * _Nonnull image, NSError * _Nonnull error) {
+    [NetworkManager.sharedManager  loadImageForActor:actor completion:^(UIImage * _Nonnull image, NSError * _Nonnull error) {
         if (image) {
             dispatch_async(dispatch_get_main_queue(), ^{
         

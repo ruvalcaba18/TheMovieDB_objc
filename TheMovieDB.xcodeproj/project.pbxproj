@@ -72,10 +72,13 @@
 				TvShowsView/View/TvShowsViewController.m,
 				TvShowsView/View/TvShowsViewController.xib,
 				UsersToRetrieve.json,
+				"Utils/Categories/DecoderFromArray/NSArray+JSONArrayDecoder.m",
+				"Utils/Categories/DecoderFromDictionary/NSDictionary+JSONDictionaryDecoder.m",
 				"Utils/Categories/FormatersCategory/NSString+DateFormatter.m",
 				"Utils/Categories/ParserCategory/NSData+ParseDataToObject.m",
 				"Utils/Categories/RoundedFiguresCategory/NSNumber+RoundFigures.m",
 				Utils/Constants/Constants.m,
+				Utils/URLGeneratorClass/URLGenerator.m,
 				Utils/ViewComponents/SelectView/SelectOptionView.m,
 				Utils/ViewComponents/SelectView/SelectOptionView.xib,
 			);

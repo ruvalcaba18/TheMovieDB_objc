@@ -245,7 +245,7 @@
     TvShowsPopularModel *tvShow = self.isOptionSelected ? self.tvShowsviewModel.popularTvShows[indexPath.row] : nil;
     [cell addShimmerEffect];
     
-    [self.tvShowsviewModel loadImageForShow:tvShow completion:^(UIImage *image, NSError *error) {
+    [self.tvShowsviewModel  loadImage:tvShow completion:^(UIImage *image, NSError *error) {
         
         if (error) {
             // TODO: Show error view
