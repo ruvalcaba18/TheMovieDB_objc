@@ -15,8 +15,9 @@
 #import "NSNumber+RoundFigures.h"
 #import "NSData+ParseDataToObject.h"
 #import "NSDictionary+JSONDictionaryDecoder.h"
-#import  "URLGenerator.h"
+#import  "GenerateURLDetails.h"
 #import "NSArray+JSONArrayDecoder.h"
+#import  "CastURLGenerator.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) MovieDetails * movieDetails;
 
 -(instancetype)initDetailViewModel;
-- (void)fetchDetailsWithOption:(OptionToSearch)option andIdentifier:(NSString *)identifier ;
+- (void)fetchDetailsWithOption:(OptionToSearch)option andIdentifier:(NSInteger)identifier ;
 - (void)fetchCastForTvShowWithId:(NSInteger)showId completion:(void (^)(NSArray *cast,NSError *error))completion ;
 - (NSString *)formattedCreators:(NSArray<Creator *> *)creators;
 

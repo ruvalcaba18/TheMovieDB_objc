@@ -11,10 +11,11 @@
 #import "UIKit/UIKit.h"
 #import "ImagesEndpoint.h"
 #import "PostersObject.h"
-#import "URLGenerator.h"
+#import "FilterURLGenerator.h"
 #import "NetworkManager.h"
 #import "NSNumber+RoundFigures.h"
 #import "NSData+ParseDataToObject.h"
+#import "SelectedEntertainmentURLGenerator.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

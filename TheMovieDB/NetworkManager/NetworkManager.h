@@ -8,10 +8,11 @@
 #import <Foundation/Foundation.h>
 #import "UIKit/UIKit.h"
 #import "TvShowsPopularModel.h"
-#import  "URLGenerator.h"
+#import  "FilterURLGenerator.h"
 #import "PostersObject.h"
 #import "NSData+ParseDataToObject.h"
 #import "Actor.h"
+#import "RetrieveURLImages.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NetworkManager : NSObject

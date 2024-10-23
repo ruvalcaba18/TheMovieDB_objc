@@ -6,8 +6,8 @@
 //
 
 typedef NS_ENUM(NSInteger,OptionToSearch) {
-    searchTvShows = 0 ,
-    searchMovies = 1 
+    searchTvShows = 10 ,
+    searchMovies = 11
 } ;
 
 

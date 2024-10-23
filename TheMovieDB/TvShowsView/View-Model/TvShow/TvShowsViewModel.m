@@ -29,9 +29,10 @@
 
 -(void)fetchShowsWithSearchOption:(OptionToSearch)option {
     
-    NSString *url = [URLGenerator generateURLForOption:option];
+    SelectedEntertainmentURLGenerator *entretainmentSelected = [[SelectedEntertainmentURLGenerator alloc] initSelectedEntertainment];
+    
   
-    [NetworkManager.sharedManager performRequestWithURL:url completion:^(NSData *data, NSError *error) {
+    [NetworkManager.sharedManager performRequestWithURL: [entretainmentSelected generateURLFor:option withIdentifier:0] completion:^(NSData *data, NSError *error) {
         if (error) {
             NSLog(@"Error %@",error.localizedDescription);
         } else {
@@ -43,9 +44,11 @@
 
 - (void)applyFilter:(TopFilter)filterOption {
     
-    NSString *url = [URLGenerator generateURLForFilter:filterOption];
+    FilterURLGenerator *filterSelected = [[FilterURLGenerator alloc] initFilterURL];
+    
+  
    
-    [NetworkManager.sharedManager performRequestWithURL:url completion:^(NSData *data, NSError *error) {
+    [NetworkManager.sharedManager performRequestWithURL: [filterSelected generateURLFor:filterOption withIdentifier:0] completion:^(NSData *data, NSError *error) {
         if (error) {
             
         } else {

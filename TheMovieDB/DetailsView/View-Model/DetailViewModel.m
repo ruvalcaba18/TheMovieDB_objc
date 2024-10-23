@@ -26,12 +26,13 @@
     return self;
 }
 
-- (void)fetchDetailsWithOption:(OptionToSearch)option andIdentifier:(NSString *)identifier {
+- (void)fetchDetailsWithOption:(OptionToSearch)option andIdentifier:(NSInteger )identifier {
     
-    NSString *url  = [URLGenerator generateURLForDetailOption:option withIdentifier: identifier];
+    GenerateURLDetails *urlDetails = [[GenerateURLDetails alloc] initGenerateURLDetails];
+    
     self.optionSelected = option;
 
-    [ NetworkManager.sharedManager performRequestWithURL:url completion:^(NSData *data, NSError *error) {
+    [ NetworkManager.sharedManager performRequestWithURL: [urlDetails generateURLFor:option withIdentifier: identifier] completion:^(NSData *data, NSError *error) {
         
         if (error) {
             NSLog(@"Error %@",error);
@@ -46,9 +47,9 @@
 
 - (void)fetchCastForTvShowWithId:(NSInteger)showId completion:(void (^)(NSArray *cast,NSError *error))completion {
     
-    NSString *urlString = [URLGenerator generateURLForCastOption: self.optionSelected forIDShow:(long)showId ];
+    CastURLGenerator *castURL = [[CastURLGenerator alloc] initCastGenerator];
     
-    [NetworkManager.sharedManager performRequestWithURL:urlString completion:^(NSData *data, NSError *error) {
+    [NetworkManager.sharedManager performRequestWithURL: [castURL generateURLFor: self.optionSelected withIdentifier: showId] completion:^(NSData *data, NSError *error) {
         
         if (error) {
             

@@ -8,13 +8,15 @@
 #import "NetworkManager.h"
 @interface NetworkManager()
 @property (nonatomic,strong) NSCache *imageCache;
+@property (nonatomic,strong) FilterURLGenerator *filterURL;
 @end
 
 
 @implementation NetworkManager
-@synthesize imageCache;
+@synthesize imageCache,filterURL;
 
 + (instancetype)sharedManager {
+    
     static NetworkManager *sharedInstance = nil;
    
     static dispatch_once_t onceToken;
@@ -28,6 +30,7 @@
     self = [super init];
     if (self) {
         self.imageCache = [[NSCache alloc] init];
+        self.filterURL = [[FilterURLGenerator alloc] initFilterURL];
     }
     return self;
 }
@@ -65,12 +68,14 @@
     
     NSString *originalName;
     NSString *imageMetaDataUrl;
-    
+    RetrieveURLImages *imagesURL = [[RetrieveURLImages alloc] initImagesURL];
     if (show.name) {
         originalName = show.original_name;
-        imageMetaDataUrl = [URLGenerator generateURLToRetrieveImagesForTvShowsWithIdentifier: (long)[show.identifier integerValue] ];
-    } else if (show.title) {        originalName = show.original_title;
-        imageMetaDataUrl =  [URLGenerator generateURLToRetrieveImagesForMoviesWithIdentifier: (long)[show.identifier integerValue] ];
+        imageMetaDataUrl = [imagesURL generateURLFor: searchTvShows withIdentifier: [show.identifier integerValue]];
+     
+    } else if (show.title) {
+        originalName = show.original_title;
+        imageMetaDataUrl = [imagesURL generateURLFor: searchMovies withIdentifier: [show.identifier integerValue]];
     }
     
     UIImage *imageCache = [self.imageCache objectForKey: show.poster_path];

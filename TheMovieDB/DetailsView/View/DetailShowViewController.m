@@ -31,7 +31,7 @@
     [self setupView];
     
     [self.viewModel fetchDetailsWithOption:self.selectedOption
-                             andIdentifier:[self.selectedShow.identifier stringValue]];
+                             andIdentifier:[self.selectedShow.identifier integerValue]];
     
     [NetworkManager.sharedManager loadImageForShow:self.selectedShow completion:^(UIImage * _Nonnull image, NSError * _Nonnull error) {
         
