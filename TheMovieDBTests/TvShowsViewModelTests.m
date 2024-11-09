@@ -8,6 +8,7 @@
 #import <XCTest/XCTest.h>
 #import "TvShowsViewModel.h"
 #import "TvShowsPopularModel.h"
+#import "NSString+DateFormatter.h"
 
 @interface TvShowsViewModelTests : XCTestCase
 
@@ -111,15 +112,34 @@
 }
 
 
-- (void)testLoadImageForShow {
+- (void)test_LoadImageForMovie {
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Load Image"];
     
     TvShowsPopularModel *mockTvShow = [[TvShowsPopularModel alloc] init];
+    mockTvShow.title = @"Transformers One";
     mockTvShow.identifier = @(1022789);
     mockTvShow.poster_path = @"/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg";
     
-    [self.viewModel loadImageForShow:mockTvShow completion:^(UIImage *image, NSError *error) {
+    [self.viewModel loadImage:mockTvShow completion:^(UIImage *image, NSError *error) {
+        XCTAssertNotNil(image, @"Image should be downloaded.");
+        XCTAssertNil(error, @"There should be no error.");
+        [expectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:15 handler:nil];
+}
+
+- (void)test_LoadImageForTVShow {
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Load Image"];
+    
+    TvShowsPopularModel *mockTvShow = [[TvShowsPopularModel alloc] init];
+    mockTvShow.title = @"Breaking Bad";
+    mockTvShow.identifier = @(1022799);
+    mockTvShow.poster_path = @"/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg";
+    
+    [self.viewModel loadImage:mockTvShow completion:^(UIImage *image, NSError *error) {
         XCTAssertNotNil(image, @"Image should be downloaded.");
         XCTAssertNil(error, @"There should be no error.");
         [expectation fulfill];
@@ -131,7 +151,7 @@
 
 - (void)testFormatDate {
     
-    NSString *formattedDate = [self.viewModel formatDate:@"2023-09-26"];
+    NSString *formattedDate = [NSString formatDateToLatinoAmericanFormat:@"2023-09-26"];
     XCTAssertEqualObjects(formattedDate, @"Sep 26, 2023", @"Date should be correctly formatted.");
 }
 

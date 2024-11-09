@@ -45,8 +45,6 @@
 - (void)applyFilter:(TopFilter)filterOption {
     
     FilterURLGenerator *filterSelected = [[FilterURLGenerator alloc] initFilterURL];
-    
-  
    
     [NetworkManager.sharedManager performRequestWithURL: [filterSelected generateURLFor:filterOption withIdentifier:0] completion:^(NSData *data, NSError *error) {
         if (error) {

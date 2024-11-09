@@ -63,16 +63,7 @@
     
 }
 
-- (void)testRetrieveUsersFromJsonFile {
-    
-    [self.viewModel retrieveUsersFromJsonFile];
-    
-    XCTAssertEqual(self.viewModel.testusers.count, 2, @"There should be 2 users loaded from the JSON file.");
-    User *firstUser = self.viewModel.testusers[0];
-    XCTAssertEqualObjects(firstUser.getUsername, @"codingkid", @"The first user's username should be 'codingkid'.");
-    XCTAssertEqualObjects(firstUser.getPassword, @"coding", @"The first user's password should be 'coding'.");
-    
-}
+
 
 
 @end

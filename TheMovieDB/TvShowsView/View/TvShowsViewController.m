@@ -7,6 +7,7 @@
 
 #import "TvShowsViewController.h"
 
+#pragma mark: - Private Functions and Variables
 @interface TvShowsViewController ()
 
 @property (nonatomic, strong) TvShowsViewModel *tvShowsviewModel;
@@ -23,6 +24,8 @@
 - (void)configureNavigationBar;
 
 @end
+
+#pragma mark: - Class Implementation
 @implementation TvShowsViewController
 
 @synthesize tvSegmentControl, tvShowsCollectionView, tvShowsviewModel, optionContainer, selectOptionView, selectedOption;
@@ -46,12 +49,12 @@
 - (void)initializeViewController {
     
     self.selectOptionView = [[SelectOptionView alloc] init];
-    self.tvShowsviewModel = [[TvShowsViewModel alloc] initViewModel];
+
     
     [self.optionContainer addSubview:self.selectOptionView];
     [self.view bringSubviewToFront:self.optionContainer];
-    [self configureOptionView];
-    [self configureSegmentController];
+    [self configureSelectOptionView];
+ 
     
 }
 
@@ -79,7 +82,7 @@
     [self.tvShowsCollectionView registerNib:[UINib nibWithNibName:@"TvShowCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:tvShowCellIdentifier];
 }
 
-- (void)configureOptionView {
+- (void)configureSelectOptionView {
     
     self.selectOptionView.translatesAutoresizingMaskIntoConstraints = NO;
     
@@ -106,12 +109,27 @@
     
     NSDictionary *userInfo = notification.userInfo;
     self.selectedOption = [userInfo[@"Option"] integerValue];
+    self.tvShowsviewModel = [[TvShowsViewModel alloc] initViewModel];
+    [self configureSegmentController];
+    
     self.tvSegmentControl.hidden = NO;
     self.tvSegmentControl.userInteractionEnabled = NO;
-    [self loadDataForSelectedOption:self.selectedOption isOptionSelected:YES];
     self.isOptionSelected = YES;
+    [self loadDataForSelectedOption:self.selectedOption isOptionSelected:YES];
     [self.selectOptionView removeFromSuperview];
 
+}
+
+- (void)configureSegmentController {
+    
+    self.tvSegmentControl.hidden = YES;
+    NSDictionary *attributes = @{ NSForegroundColorAttributeName : [UIColor whiteColor] };
+    [self.tvSegmentControl setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    [self.tvSegmentControl setTitleTextAttributes:attributes forState:UIControlStateSelected];
+    [self.tvSegmentControl addTarget:self action:@selector(optionChanged:) forControlEvents:UIControlEventValueChanged];
+    
+    [self applySegmentControlShimmerEffect];
+    
 }
 
 - (void)loadDataForSelectedOption:(OptionToSearch)option isOptionSelected:(BOOL)isSelected{
@@ -156,17 +174,7 @@
     // TODO: Implement error handling
 }
 
-- (void)configureSegmentController {
-    
-    self.tvSegmentControl.hidden = YES;
-    NSDictionary *attributes = @{ NSForegroundColorAttributeName : [UIColor whiteColor] };
-    [self.tvSegmentControl setTitleTextAttributes:attributes forState:UIControlStateNormal];
-    [self.tvSegmentControl setTitleTextAttributes:attributes forState:UIControlStateSelected];
-    [self.tvSegmentControl addTarget:self action:@selector(optionChanged:) forControlEvents:UIControlEventValueChanged];
-    
-    [self applySegmentControlShimmerEffect];
-    
-}
+
 
 - (void)applySegmentControlShimmerEffect {
     
@@ -192,6 +200,7 @@
 }
 
 - (void)optionChanged:(UISegmentedControl *)sender {
+    
     NSInteger selectedIndex = sender.selectedSegmentIndex;
     TopFilter selectedFilter;
 
@@ -218,10 +227,13 @@
     if (selectedIndex >= 0 && selectedIndex < filters.count) {
       
         selectedFilter = (TopFilter)[filters[selectedIndex] integerValue];
-   
-        [self.tvShowsviewModel applyFilter:selectedFilter];
         
-        [self.tvShowsCollectionView reloadData];
+        [self.tvShowsviewModel applyFilter:selectedFilter];
+    
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.tvShowsCollectionView reloadData];
+        });
+   
     }
 }
 

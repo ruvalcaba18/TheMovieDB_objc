@@ -69,6 +69,7 @@
     NSString *originalName;
     NSString *imageMetaDataUrl;
     RetrieveURLImages *imagesURL = [[RetrieveURLImages alloc] initImagesURL];
+    
     if (show.name) {
         originalName = show.original_name;
         imageMetaDataUrl = [imagesURL generateURLFor: searchTvShows withIdentifier: [show.identifier integerValue]];
